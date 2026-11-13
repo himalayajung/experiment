@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360" font-family="Helvetica, Arial, sans-serif" font-size="13" role="img" aria-label="Worked example: a problem worth 16 solved using two stepping stones, one of which used a third. With α = 1 the solver keeps all 16. With α = 0.2 the solver keeps 3.2 and the rest flows back: 6.4 to step B, 1.28 kept by step A which passes 5.12 to step C.">
+  <style>
+    .viz { --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --line: #c9c7c0; --oso: #eb6834; --soft: #fbe3d8; }
+    @media (prefers-color-scheme: dark) { .viz { --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --line: #4a4945; --oso: #d95926; --soft: #3a2a22; } }
+    .bg { fill: var(--surface); } text { fill: var(--ink); } .muted { fill: var(--ink-2); font-size: 12px; }
+    .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; } .paid { fill: var(--soft); stroke: var(--oso); }
+    .edge { stroke: var(--ink-2); stroke-width: 1.5; fill: none; } .flow { stroke: var(--oso); stroke-width: 2; fill: none; }
+    .amt { font-weight: 700; } .title { font-size: 15px; font-weight: 700; }
+  </style>
+  <defs>
+    <marker id="up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a8984"/></marker>
+    <marker id="dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/></marker>
+  </defs>
+  <g class="viz">
+    <rect class="bg" width="760" height="360" rx="8"/>
+
+    <!-- left panel: α = 1 -->
+    <text class="title" x="30" y="32">α = 1: nothing flows back</text>
+    <text class="muted" x="30" y="50">The solver keeps the whole reward.</text>
+    <text class="muted" x="30" y="66">Grey arrows: which results a proof used.</text>
+    <path class="edge" d="M100,214 L150,152" marker-end="url(#up)"/>
+    <path class="edge" d="M260,214 L210,152" marker-end="url(#up)"/>
+    <path class="edge" d="M100,300 L100,262" marker-end="url(#up)"/>
+    <rect class="box paid" x="110" y="96" width="140" height="54" rx="8"/>
+    <text x="180" y="118" text-anchor="middle">Problem, reward 16</text><text x="180" y="138" text-anchor="middle" class="amt">solver: 16</text>
+    <rect class="box" x="40" y="214" width="120" height="46" rx="8"/>
+    <text x="100" y="233" text-anchor="middle">Step A</text><text x="100" y="251" text-anchor="middle" class="amt">0</text>
+    <rect class="box" x="200" y="214" width="120" height="46" rx="8"/>
+    <text x="260" y="233" text-anchor="middle">Step B</text><text x="260" y="251" text-anchor="middle" class="amt">0</text>
+    <rect class="box" x="40" y="302" width="120" height="46" rx="8"/>
+    <text x="100" y="321" text-anchor="middle">Step C</text><text x="100" y="339" text-anchor="middle" class="amt">0</text>
+
+    <line x1="380" y1="70" x2="380" y2="340" stroke="#c9c7c0"/>
+
+    <!-- right panel: α = 0.2 -->
+    <text class="title" x="410" y="32">α = 0.2: most flows back</text>
+    <text class="muted" x="410" y="50">Each result keeps 20% and passes 80% to what it used;</text>
+    <text class="muted" x="410" y="66">one that used nothing keeps all it gets.</text>
+    <path class="flow" d="M520,152 L478,212" marker-end="url(#dn)"/>
+    <path class="flow" d="M600,152 L642,212" marker-end="url(#dn)"/>
+    <path class="flow" d="M480,262 L480,300" marker-end="url(#dn)"/>
+    <text class="muted" x="452" y="186" text-anchor="end">6.4</text>
+    <text class="muted" x="668" y="186">6.4</text>
+    <text class="muted" x="490" y="286">5.12</text>
+    <rect class="box paid" x="490" y="96" width="140" height="54" rx="8"/>
+    <text x="560" y="118" text-anchor="middle">Problem, reward 16</text><text x="560" y="138" text-anchor="middle" class="amt">solver: 3.2</text>
+    <rect class="box paid" x="420" y="214" width="120" height="46" rx="8"/>
+    <text x="480" y="233" text-anchor="middle">Step A</text><text x="480" y="251" text-anchor="middle" class="amt">1.28</text>
+    <rect class="box paid" x="580" y="214" width="120" height="46" rx="8"/>
+    <text x="640" y="233" text-anchor="middle">Step B</text><text x="640" y="251" text-anchor="middle" class="amt">6.4</text>
+    <rect class="box paid" x="420" y="302" width="120" height="46" rx="8"/>
+    <text x="480" y="321" text-anchor="middle">Step C</text><text x="480" y="339" text-anchor="middle" class="amt">5.12</text>
+    <text class="muted" x="560" y="330">Total still 16:</text>
+    <text class="muted" x="560" y="346">3.2 + 1.28 + 6.4 + 5.12</text>
+  </g>
+</svg>
