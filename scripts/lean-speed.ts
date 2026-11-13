@@ -6,7 +6,8 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { countedOf, moneyByRound, type CommunityResult } from '../src/lean/community.ts';
-import { SOCIETIES, medianRange } from '../src/lean/societies.ts';
+import { SOCIETIES, medianRange, osoLabel, osoParams } from '../src/lean/societies.ts';
+import { lineChart } from '../src/report/figures.ts';
 
 const [id, only] = process.argv.slice(2);
 if (!id) throw new Error('usage: npm run speed -- <experiment id> [setups, comma-separated]');
@@ -60,4 +61,28 @@ for (const t of ids) lines.push(`| ${t} | ${keys.map((k) => {
   return `${hit} of ${f.length} · ${rnd(medianRange(f.map((x) => x?.round ?? Infinity))[0])} · ${usd(medianRange(f.map((x) => x?.money ?? Infinity))[0])}`;
 }).join(' | ')} |`);
 writeFileSync(join(dir, 'speed.md'), lines.join('\n') + '\n');
+
+// The same as a graph: median money to reach each number of targets, with its 95% range; a line stops once half
+// or more of a setup's runs never got there. The top of the graph is all the money the labs had.
+const cap = sample.opts.budget * sample.opts.agents.length;
+// When the setups differ only in α, the lines are named by α and the other OSO parameters go in the subtitle.
+const params = keys.map((k) => osoParams(groups.get(k)![0].opts).split(' · '));
+const onlyAlpha = params.every((p) => p.filter((x) => !x.startsWith('α ')).join() === params[0].filter((x) => !x.startsWith('α ')).join());
+const series = keys.map((k, i) => {
+  const rs = groups.get(k)!, pts: [number, number][] = [], ranges: [number, number][] = [];
+  for (let n = 1; n <= targets.length; n++) {
+    const [m, lo, hi] = medianRange(rs.map((r) => atK(r, n, 'money')));
+    if (m === Infinity) break;
+    pts.push([n, m]); ranges.push([lo ?? m, Math.min(cap, hi ?? m)]);
+  }
+  return { name: onlyAlpha ? params[i].find((x) => x.startsWith('α '))!.replace('α ', 'α = ') : osoLabel(SOCIETIES[k].name, groups.get(k)![0].opts), slot: SOCIETIES[k].slot ?? 2, colour: SOCIETIES[k].colour, points: pts, ranges };
+});
+mkdirSync(join(dir, 'figures'), { recursive: true });
+writeFileSync(join(dir, 'figures', 'money-to-targets.svg'), lineChart({
+  title: 'Money spent to reach a number of targets',
+  subtitle: `${onlyAlpha ? `All: ${params[0].filter((x) => !x.startsWith('α ')).join(', ')}. ` : ''}Median of ${groups.get(keys[0])!.length} runs; bars: 95% ranges.`,
+  xLabel: `Targets proved (of ${targets.length})`, yLabel: 'Money spent, all labs ($)', series,
+  x: [1, targets.length], y: [0, cap], xTicks: targets.map((_, i) => i + 1), yTicks: [0, cap / 4, cap / 2, (3 * cap) / 4, cap],
+  markers: true, format: { y: (v) => `$${v.toFixed(2)}` },
+}) + '\n');
 console.log(lines.filter((l) => !l.startsWith('![')).join('\n'));
