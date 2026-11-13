@@ -1,5 +1,7 @@
 // How soon a Lean experiment's setups reach its targets, from the saved runs (costs nothing).
-// Run from the repository: npm run speed -- <experiment id> [setups, comma-separated]
+// Run from the repository: npm run speed -- <experiment id> [setups, comma-separated] [--with=<other id>:<setup>]
+// --with adds one setup from another experiment to the graph only (saved as money-to-targets-with-<id>-<setup>.svg);
+// it must have the same targets and the same money per run.
 // Writes results/community/<id>/speed.md, the tables behind the graph on the app's Experiments → Results page.
 // A run that never reaches a target counts as "not reached": medians and their 95% ranges use every run,
 // so a setup is not flattered by leaving out the runs that failed.
@@ -8,16 +10,22 @@ import { join } from 'node:path';
 import { countedOf, moneyByRound, type CommunityResult } from '../src/lean/community.ts';
 import { SOCIETIES, medianRange, osoLabel, osoParams } from '../src/lean/societies.ts';
 import { lineChart } from '../src/report/figures.ts';
+import { EXPERIMENT_NAMES } from '../src/lean/names.ts';
 
-const [id, only] = process.argv.slice(2);
-if (!id) throw new Error('usage: npm run speed -- <experiment id> [setups, comma-separated]');
+const args = process.argv.slice(2), withArg = args.find((a) => a.startsWith('--with='))?.slice(7);
+const [id, only] = args.filter((a) => !a.startsWith('--'));
+if (!id) throw new Error('usage: npm run speed -- <experiment id> [setups, comma-separated] [--with=<other id>:<setup>]');
 const RUNS = 'lean/runs';
-const groups = new Map<string, CommunityResult[]>();
-for (const d of readdirSync(RUNS).sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))) {
-  const m = new RegExp(`^${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-r\\d+-(.+)$`).exec(d);
-  if (!m || d.endsWith('.log') || !existsSync(join(RUNS, d, 'result.json')) || !SOCIETIES[m[1]]) continue;
-  groups.set(m[1], [...(groups.get(m[1]) ?? []), JSON.parse(readFileSync(join(RUNS, d, 'result.json'), 'utf8'))]);
+function load(exp: string) {
+  const out = new Map<string, CommunityResult[]>();
+  for (const d of readdirSync(RUNS).sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))) {
+    const m = new RegExp(`^${exp.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-r\\d+-(.+)$`).exec(d);
+    if (!m || d.endsWith('.log') || !existsSync(join(RUNS, d, 'result.json')) || !SOCIETIES[m[1]]) continue;
+    out.set(m[1], [...(out.get(m[1]) ?? []), JSON.parse(readFileSync(join(RUNS, d, 'result.json'), 'utf8'))]);
+  }
+  return out;
 }
+const groups = load(id);
 const ORDER = Object.keys(SOCIETIES);
 const keys = (only ? only.split(',') : [...groups.keys()]).filter((k) => groups.has(k)).sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
 if (!keys.length) throw new Error(`no finished runs for ${id}`);
@@ -68,19 +76,34 @@ const cap = sample.opts.budget * sample.opts.agents.length;
 // When the setups differ only in α, the lines are named by α and the other OSO parameters go in the subtitle.
 const params = keys.map((k) => osoParams(groups.get(k)![0].opts).split(' · '));
 const onlyAlpha = params.every((p) => p.filter((x) => !x.startsWith('α ')).join() === params[0].filter((x) => !x.startsWith('α ')).join());
-const series = keys.map((k, i) => {
-  const rs = groups.get(k)!, pts: [number, number][] = [], ranges: [number, number][] = [];
+const curve = (rs: CommunityResult[]) => {
+  const pts: [number, number][] = [], ranges: [number, number][] = [];
   for (let n = 1; n <= targets.length; n++) {
     const [m, lo, hi] = medianRange(rs.map((r) => atK(r, n, 'money')));
     if (m === Infinity) break;
     pts.push([n, m]); ranges.push([lo ?? m, Math.min(cap, hi ?? m)]);
   }
-  return { name: onlyAlpha ? params[i].find((x) => x.startsWith('α '))!.replace('α ', 'α = ') : osoLabel(SOCIETIES[k].name, groups.get(k)![0].opts), slot: SOCIETIES[k].slot ?? 2, colour: SOCIETIES[k].colour, points: pts, ranges };
-});
+  return { points: pts, ranges };
+};
+const series = keys.map((k, i) => ({
+  name: onlyAlpha ? params[i].find((x) => x.startsWith('α '))!.replace('α ', 'α = ') : osoLabel(SOCIETIES[k].name, groups.get(k)![0].opts),
+  slot: SOCIETIES[k].slot ?? 2, colour: SOCIETIES[k].colour, ...curve(groups.get(k)!),
+}));
+let file = 'money-to-targets.svg', runsNote = `Median of ${groups.get(keys[0])!.length} runs`;
+if (withArg) {
+  const [exp, setup] = withArg.split(':'), rs = load(exp).get(setup);
+  if (!rs?.length) throw new Error(`no finished runs for ${exp}, setup ${setup}`);
+  const o = rs[0].opts;
+  if (countedOf(rs[0]).join() !== targets.join() || o.budget * o.agents.length !== cap) throw new Error(`${withArg} has other targets or money`);
+  const from = (EXPERIMENT_NAMES[exp] ?? exp).split(':')[0];
+  series.push({ name: `${SOCIETIES[setup].name} (${from})`, slot: SOCIETIES[setup].slot ?? 2, colour: SOCIETIES[setup].colour, ...curve(rs) });
+  file = `money-to-targets-with-${exp}-${setup}.svg`;
+  runsNote += ` (${SOCIETIES[setup].name.toLowerCase()}: ${rs.length})`;
+}
 mkdirSync(join(dir, 'figures'), { recursive: true });
-writeFileSync(join(dir, 'figures', 'money-to-targets.svg'), lineChart({
+writeFileSync(join(dir, 'figures', file), lineChart({
   title: 'Money spent to reach a number of targets',
-  subtitle: `${onlyAlpha ? `All: ${params[0].filter((x) => !x.startsWith('α ')).join(', ')}. ` : ''}Median of ${groups.get(keys[0])!.length} runs; bars: 95% ranges.`,
+  subtitle: `${onlyAlpha ? `${withArg ? 'α' : 'All'}: ${params[0].filter((x) => !x.startsWith('α ')).join(', ')}. ` : ''}${runsNote}; bars: 95% ranges.`,
   xLabel: `Targets proved (of ${targets.length})`, yLabel: 'Money spent, all labs ($)', series,
   x: [1, targets.length], y: [0, cap], xTicks: targets.map((_, i) => i + 1), yTicks: [0, cap / 4, cap / 2, (3 * cap) / 4, cap],
   markers: true, format: { y: (v) => `$${v.toFixed(2)}` },

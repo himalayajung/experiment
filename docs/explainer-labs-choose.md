@@ -13,10 +13,11 @@ Four AI labs, each with $0.15, worked on 8 maths problems that we wrote ourselve
 
 ## What we saw
 
-![Money spent to reach a number of targets, by how much credit is passed back](../results/community/lean-m3/figures/money-to-targets.svg)
+![Money spent to reach a number of targets, by how much credit is passed back](../results/community/lean-m3/figures/money-to-targets-with-lean-main-b-traditional.svg)
 
 - **Easy problems cost the same** under every rule.
 - **Harder problems looked cheaper at α = 0.2:** $0.14 against $0.24 to reach 5, and $0.25 against $0.46 to reach 6. Only α = 0.2 reached 7 in most runs.
+- **Traditional research** (stepping stones kept private until a problem is solved) cost about the same as α = 1 and 0.8. Its line comes from an earlier experiment (Spend all, 20 runs) with the same problems, model and money, but without the new-result reward and with older prompts.
 - **Same total by the end:** 6 to 7 of 8 under every rule.
 - **Everyone shared almost everything (β 98–100%),** because a small reward for new results paid for sharing on its own.
 
