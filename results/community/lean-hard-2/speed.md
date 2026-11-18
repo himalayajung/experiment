@@ -8,45 +8,45 @@ The graphs are on the app's Experiments → Results page for this experiment.
 
 | Setup | Runs that reached it | Median money | Median round |
 | --- | --- | --- | --- |
-| Shared library | 5 of 5 (57–100%) | $0.117 (too few runs for a range) | 3 (too few runs for a range) |
-| Planner with a good strategy | 5 of 5 (57–100%) | $0.074 (too few runs for a range) | 3 (too few runs for a range) |
-| Plain planner | 5 of 5 (57–100%) | $0.320 (too few runs for a range) | 6 (too few runs for a range) |
-| Pay per lemma | 5 of 5 (57–100%) | $0.120 (too few runs for a range) | 3 (too few runs for a range) |
-| Traditional | 5 of 5 (57–100%) | $0.271 (too few runs for a range) | 5 (too few runs for a range) |
-| OSO, α 0.2 | 5 of 5 (57–100%) | $0.135 (too few runs for a range) | 3 (too few runs for a range) |
+| Shared library | 5 of 5 (57–100%) | $0.076 (too few runs for a range) | 3 (too few runs for a range) |
+| Planner with a good strategy | 5 of 5 (57–100%) | $0.048 (too few runs for a range) | 3 (too few runs for a range) |
+| Plain planner | 5 of 5 (57–100%) | $0.164 (too few runs for a range) | 6 (too few runs for a range) |
+| Pay per lemma | 5 of 5 (57–100%) | $0.080 (too few runs for a range) | 3 (too few runs for a range) |
+| Traditional | 5 of 5 (57–100%) | $0.138 (too few runs for a range) | 5 (too few runs for a range) |
+| OSO, α 0.2 | 5 of 5 (57–100%) | $0.090 (too few runs for a range) | 3 (too few runs for a range) |
 
 ## Reaching 5 targets
 
 | Setup | Runs that reached it | Median money | Median round |
 | --- | --- | --- | --- |
-| Shared library | 5 of 5 (57–100%) | $0.214 (too few runs for a range) | 4 (too few runs for a range) |
-| Planner with a good strategy | 5 of 5 (57–100%) | $0.148 (too few runs for a range) | 5 (too few runs for a range) |
-| Plain planner | 5 of 5 (57–100%) | $0.373 (too few runs for a range) | 7 (too few runs for a range) |
-| Pay per lemma | 5 of 5 (57–100%) | $0.219 (too few runs for a range) | 4 (too few runs for a range) |
-| Traditional | 5 of 5 (57–100%) | $0.408 (too few runs for a range) | 7 (too few runs for a range) |
-| OSO, α 0.2 | 5 of 5 (57–100%) | $0.228 (too few runs for a range) | 5 (too few runs for a range) |
+| Shared library | 5 of 5 (57–100%) | $0.143 (too few runs for a range) | 4 (too few runs for a range) |
+| Planner with a good strategy | 5 of 5 (57–100%) | $0.097 (too few runs for a range) | 5 (too few runs for a range) |
+| Plain planner | 5 of 5 (57–100%) | $0.191 (too few runs for a range) | 7 (too few runs for a range) |
+| Pay per lemma | 5 of 5 (57–100%) | $0.146 (too few runs for a range) | 4 (too few runs for a range) |
+| Traditional | 5 of 5 (57–100%) | $0.208 (too few runs for a range) | 7 (too few runs for a range) |
+| OSO, α 0.2 | 5 of 5 (57–100%) | $0.152 (too few runs for a range) | 5 (too few runs for a range) |
 
 ## Reaching 6 targets
 
 | Setup | Runs that reached it | Median money | Median round |
 | --- | --- | --- | --- |
-| Shared library | 5 of 5 (57–100%) | $0.509 (too few runs for a range) | 8 (too few runs for a range) |
-| Planner with a good strategy | 5 of 5 (57–100%) | $0.188 (too few runs for a range) | 6 (too few runs for a range) |
-| Plain planner | 5 of 5 (57–100%) | $0.406 (too few runs for a range) | 9 (too few runs for a range) |
-| Pay per lemma | 5 of 5 (57–100%) | $0.379 (too few runs for a range) | 9 (too few runs for a range) |
-| Traditional | 5 of 5 (57–100%) | $0.657 (too few runs for a range) | 10 (too few runs for a range) |
-| OSO, α 0.2 | 5 of 5 (57–100%) | $0.425 (too few runs for a range) | 8 (too few runs for a range) |
+| Shared library | 5 of 5 (57–100%) | $0.335 (too few runs for a range) | 8 (too few runs for a range) |
+| Planner with a good strategy | 5 of 5 (57–100%) | $0.126 (too few runs for a range) | 6 (too few runs for a range) |
+| Plain planner | 5 of 5 (57–100%) | $0.208 (too few runs for a range) | 9 (too few runs for a range) |
+| Pay per lemma | 5 of 5 (57–100%) | $0.253 (too few runs for a range) | 9 (too few runs for a range) |
+| Traditional | 5 of 5 (57–100%) | $0.335 (too few runs for a range) | 10 (too few runs for a range) |
+| OSO, α 0.2 | 5 of 5 (57–100%) | $0.280 (too few runs for a range) | 8 (too few runs for a range) |
 
 ## Reaching 7 targets
 
 | Setup | Runs that reached it | Median money | Median round |
 | --- | --- | --- | --- |
-| Shared library | 5 of 5 (57–100%) | $0.509 (too few runs for a range) | 9 (too few runs for a range) |
-| Planner with a good strategy | 5 of 5 (57–100%) | $0.203 (too few runs for a range) | 6 (too few runs for a range) |
-| Plain planner | 4 of 5 (38–96%) | $1.137 (too few runs for a range) | 21 (too few runs for a range) |
-| Pay per lemma | 5 of 5 (57–100%) | $0.699 (too few runs for a range) | 12 (too few runs for a range) |
-| Traditional | 4 of 5 (38–96%) | $0.812 (too few runs for a range) | 12 (too few runs for a range) |
-| OSO, α 0.2 | 5 of 5 (57–100%) | $0.727 (too few runs for a range) | 12 (too few runs for a range) |
+| Shared library | 5 of 5 (57–100%) | $0.335 (too few runs for a range) | 9 (too few runs for a range) |
+| Planner with a good strategy | 5 of 5 (57–100%) | $0.134 (too few runs for a range) | 6 (too few runs for a range) |
+| Plain planner | 4 of 5 (38–96%) | $0.587 (too few runs for a range) | 21 (too few runs for a range) |
+| Pay per lemma | 5 of 5 (57–100%) | $0.453 (too few runs for a range) | 12 (too few runs for a range) |
+| Traditional | 4 of 5 (38–96%) | $0.418 (too few runs for a range) | 12 (too few runs for a range) |
+| OSO, α 0.2 | 5 of 5 (57–100%) | $0.484 (too few runs for a range) | 12 (too few runs for a range) |
 
 ## Each target
 
@@ -54,14 +54,14 @@ Runs that reached it · median round · median money.
 
 | Target | Shared library | Planner with a good strategy | Plain planner | Pay per lemma | Traditional | OSO, α 0.2 |
 | --- | --- | --- | --- | --- | --- | --- |
-| A3 | 5 of 5 · 6 · $0.240 | 5 of 5 · 4 · $0.148 | 5 of 5 · 6 · $0.320 | 5 of 5 · 6 · $0.331 | 5 of 5 · 7 · $0.408 | 5 of 5 · 8 · $0.425 |
-| A5 | 4 of 5 · 36 · $1.407 | 5 of 5 · 27 · $0.662 | 1 of 5 · – · – | 3 of 5 · 41 · $1.399 | 0 of 5 · – · – | 4 of 5 · 27 · $1.257 |
-| B3 | 5 of 5 · 1 · $0.031 | 5 of 5 · 2 · $0.041 | 5 of 5 · 2 · $0.067 | 5 of 5 · 1 · $0.026 | 5 of 5 · 1 · $0.028 | 5 of 5 · 1 · $0.022 |
-| B5 | 4 of 5 · 15 · $0.951 | 5 of 5 · 13 · $0.369 | 2 of 5 · – · – | 5 of 5 · 20 · $0.940 | 1 of 5 · – · – | 5 of 5 · 20 · $1.105 |
-| C3 | 5 of 5 · 1 · $0.039 | 5 of 5 · 2 · $0.048 | 5 of 5 · 1 · $0.031 | 5 of 5 · 2 · $0.052 | 5 of 5 · 2 · $0.079 | 5 of 5 · 1 · $0.022 |
-| C4 | 5 of 5 · 2 · $0.067 | 5 of 5 · 3 · $0.072 | 5 of 5 · 2 · $0.067 | 5 of 5 · 2 · $0.073 | 5 of 5 · 3 · $0.105 | 5 of 5 · 2 · $0.061 |
-| H4 | 4 of 5 · 17 · $0.970 | 5 of 5 · 13 · $0.400 | 1 of 5 · – · – | 5 of 5 · 21 · $0.940 | 1 of 5 · – · – | 5 of 5 · 22 · $1.152 |
-| H5 | 5 of 5 · 16 · $0.937 | 5 of 5 · 11 · $0.345 | 3 of 5 · 22 · $1.137 | 5 of 5 · 18 · $0.940 | 2 of 5 · – · – | 5 of 5 · 19 · $1.034 |
-| H6 | 5 of 5 · 9 · $0.509 | 5 of 5 · 4 · $0.118 | 5 of 5 · 8 · $0.389 | 5 of 5 · 8 · $0.379 | 5 of 5 · 12 · $0.812 | 5 of 5 · 5 · $0.215 |
-| X1 | 5 of 5 · 8 · $0.509 | 5 of 5 · 6 · $0.203 | 2 of 5 · – · – | 5 of 5 · 12 · $0.699 | 4 of 5 · 12 · $0.744 | 5 of 5 · 12 · $0.727 |
-| X2 | 5 of 5 · 3 · $0.117 | 5 of 5 · 4 · $0.148 | 5 of 5 · 7 · $0.373 | 5 of 5 · 4 · $0.153 | 5 of 5 · 7 · $0.408 | 5 of 5 · 5 · $0.215 |
+| A3 | 5 of 5 · 6 · $0.161 | 5 of 5 · 4 · $0.097 | 5 of 5 · 6 · $0.164 | 5 of 5 · 6 · $0.221 | 5 of 5 · 7 · $0.208 | 5 of 5 · 8 · $0.280 |
+| A5 | 4 of 5 · 36 · $1.092 | 5 of 5 · 27 · $0.498 | 1 of 5 · – · – | 3 of 5 · 41 · $1.092 | 0 of 5 · – · – | 4 of 5 · 27 · $0.869 |
+| B3 | 5 of 5 · 1 · $0.021 | 5 of 5 · 2 · $0.027 | 5 of 5 · 2 · $0.034 | 5 of 5 · 1 · $0.017 | 5 of 5 · 1 · $0.015 | 5 of 5 · 1 · $0.015 |
+| B5 | 4 of 5 · 15 · $0.639 | 5 of 5 · 13 · $0.248 | 2 of 5 · – · – | 5 of 5 · 20 · $0.616 | 1 of 5 · – · – | 5 of 5 · 20 · $0.739 |
+| C3 | 5 of 5 · 1 · $0.026 | 5 of 5 · 2 · $0.032 | 5 of 5 · 1 · $0.016 | 5 of 5 · 2 · $0.035 | 5 of 5 · 2 · $0.041 | 5 of 5 · 1 · $0.015 |
+| C4 | 5 of 5 · 2 · $0.045 | 5 of 5 · 3 · $0.048 | 5 of 5 · 2 · $0.034 | 5 of 5 · 2 · $0.049 | 5 of 5 · 3 · $0.054 | 5 of 5 · 2 · $0.041 |
+| H4 | 4 of 5 · 17 · $0.652 | 5 of 5 · 13 · $0.268 | 1 of 5 · – · – | 5 of 5 · 21 · $0.616 | 1 of 5 · – · – | 5 of 5 · 22 · $0.769 |
+| H5 | 5 of 5 · 16 · $0.631 | 5 of 5 · 11 · $0.233 | 3 of 5 · 22 · $0.588 | 5 of 5 · 18 · $0.616 | 2 of 5 · – · – | 5 of 5 · 19 · $0.692 |
+| H6 | 5 of 5 · 9 · $0.335 | 5 of 5 · 4 · $0.079 | 5 of 5 · 8 · $0.199 | 5 of 5 · 8 · $0.253 | 5 of 5 · 12 · $0.418 | 5 of 5 · 5 · $0.144 |
+| X1 | 5 of 5 · 8 · $0.335 | 5 of 5 · 6 · $0.134 | 2 of 5 · – · – | 5 of 5 · 12 · $0.453 | 4 of 5 · 12 · $0.381 | 5 of 5 · 12 · $0.484 |
+| X2 | 5 of 5 · 3 · $0.076 | 5 of 5 · 4 · $0.097 | 5 of 5 · 7 · $0.191 | 5 of 5 · 4 · $0.102 | 5 of 5 · 7 · $0.208 | 5 of 5 · 5 · $0.144 |

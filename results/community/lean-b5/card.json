@@ -6,7 +6,7 @@
  "ranAt": "2026-11-08T03:57:52.045Z",
  "design": {
   "question": "For the same agents, checker and money, does a community prove more targets when value flows back (OSO) than when results are only shared, or kept private until a target is proved?",
-  "compare": "OSO, α 0.2, Shared library",
+  "compare": "Shared library, OSO, α 0.2",
   "fixed": "the same 4 agents (the single agent: the first, with all the money), $0.80 in all, Lean checks every proof",
   "measure": "targets proved by the end of a run, of 8; money to reach 3 targets is shown beside it",
   "better": "higher",
@@ -15,32 +15,33 @@
  "answer": "OSO, α 0.2 proved 6.60 (95% range 5.91 to 7.29) targets of 8 a run; Shared library 6.10 (95% range 5.57 to 6.63). Difference: 0.50 (95% range -0.37 to 1.37).",
  "table": [
   {
-   "society": "OSO, α 0.2",
-   "settings": "shared at once · α 0.2",
-   "targets proved": "6.60 ± 0.97 of 8",
+   "society": "Shared library",
+   "OSO parameters": "public at once · α 1 · m 0 · m_bit 0 · f 0",
+   "targets proved": "6.10 ± 0.74 of 8",
    "money to 3 targets": "$0.05 (10 of 10 got there)",
    "spent": "$0.80",
-   "lemmas proved": "17.20",
-   "built on another lab": "8.40",
-   "lemmas proved twice": "0.20",
-   "targets proved twice": "3.00"
-  },
-  {
-   "society": "Shared library",
-   "settings": "shared at once · α 1",
-   "targets proved": "6.10 ± 0.74 of 8",
-   "money to 3 targets": "$0.03 (10 of 10 got there)",
-   "spent": "$0.81",
    "lemmas proved": "8.50",
-   "built on another lab": "3.40",
+   "built on another lab": "3.10",
    "lemmas proved twice": "0.20",
    "targets proved twice": "2.70"
+  },
+  {
+   "society": "OSO, α 0.2",
+   "OSO parameters": "public at once · α 0.2 · m 0 · m_bit 0 · f 0",
+   "targets proved": "6.60 ± 0.97 of 8",
+   "money to 3 targets": "$0.07 (10 of 10 got there)",
+   "spent": "$0.79",
+   "lemmas proved": "17.20",
+   "built on another lab": "7.00",
+   "lemmas proved twice": "0.20",
+   "targets proved twice": "3.00"
   }
  ],
  "caveats": [
   "Labs could not stop early: each worked until its money or the rounds ran out, so setups are compared at the same money spent.",
-  "Rewards differ from the current simulation model: the knowledge reward is off (the simulation pays 1 per new bit since v5): Lean has no agreed measure of a result's new knowledge yet, see docs/design.md; value flowing back is still split by the money spent proving each parent, not by the work a parent saves (1/p) as in the simulation.",
-  "Table values are mean ± standard deviation over runs. Above: means with 95% ranges (Student t), and differences between setups with their 95% ranges; runs are not paired."
+  "Rewards differ from the current simulation model: the knowledge reward is off (the simulation pays 1 per new bit since v5): Lean has no agreed measure of a result's new knowledge yet, see docs/design.md; value flowing back is split by the money spent proving each parent, not by the work a parent saves (1/p) as in the simulation.",
+  "Table values are mean ± standard deviation over runs. Above: means with 95% ranges (Student t), and differences between setups with their 95% ranges; runs are not paired.",
+  "Money in the results is tokens at a fixed reference price per model (src/lean/prices.ts), not what the provider charged on the day, so runs on different days compare. The cost below is what was charged."
  ],
  "cost": "$16.11 as charged",
  "page": "results/community/lean-b5/summary.md",

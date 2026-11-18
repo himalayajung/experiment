@@ -19,7 +19,7 @@
    "OSO parameters": "labs choose when to publish · α 1 · m 0 · m_bit by proof size · f 0",
    "targets proved": "6.30 ± 0.95 of 8",
    "money to 3 targets": "$0.06 (10 of 10 got there)",
-   "spent": "$0.61",
+   "spent": "$0.60",
    "lemmas proved": "19.60",
    "built on another lab": "8.20",
    "lemmas proved twice": "0.60",
@@ -33,7 +33,7 @@
    "OSO parameters": "labs choose when to publish · α 0.8 · m 0 · m_bit by proof size · f 0",
    "targets proved": "6.10 ± 1.10 of 8",
    "money to 3 targets": "$0.06 (10 of 10 got there)",
-   "spent": "$0.60",
+   "spent": "$0.59",
    "lemmas proved": "19.60",
    "built on another lab": "7.70",
    "lemmas proved twice": "0.80",
@@ -47,7 +47,7 @@
    "OSO parameters": "labs choose when to publish · α 0.2 · m 0 · m_bit by proof size · f 0",
    "targets proved": "6.70 ± 1.06 of 8",
    "money to 3 targets": "$0.07 (10 of 10 got there)",
-   "spent": "$0.59",
+   "spent": "$0.58",
    "lemmas proved": "20.40",
    "built on another lab": "9.40",
    "lemmas proved twice": "0.50",
@@ -60,7 +60,8 @@
  "caveats": [
   "Labs could not stop early: each worked until its money or the rounds ran out, so setups are compared at the same money spent.",
   "Rewards differ from the current simulation model: the knowledge reward is measured by proof size (log2(1 + symbols/40), at most 4), a stand-in for the simulation's log2(1/p) per new bit; the simulation's prediction for sharing comes from its own fields, not from this problem set with this reward; a lab could pad its proofs, so sizes are checked against runs without the reward; value flowing back is split by the money spent proving each parent, not by the work a parent saves (1/p) as in the simulation.",
-  "Table values are mean ± standard deviation over runs. Above: means with 95% ranges (Student t), and differences between setups with their 95% ranges; runs are not paired."
+  "Table values are mean ± standard deviation over runs. Above: means with 95% ranges (Student t), and differences between setups with their 95% ranges; runs are not paired.",
+  "Money in the results is tokens at a fixed reference price per model (src/lean/prices.ts), not what the provider charged on the day, so runs on different days compare. The cost below is what was charged."
  ],
  "cost": "$17.94 as charged",
  "page": "results/community/lean-m3/summary.md",

@@ -8,9 +8,9 @@
 
 | society | OSO parameters | targets proved | money to 2 targets | spent | lemmas proved | built on another lab | lemmas proved twice | targets proved twice | lemmas published at once | with no PUBLISH line | lemma proof size |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Labs choose, reward off, α 1 | labs choose when to publish · α 1 · m 0 · m_bit 0 · f 0 | 4.10 ± 1.10 of 8 | $0.11 (10 of 10 got there) | $0.62 | 0.70 | 0.30 | 0.00 | 1.20 | 58% (95% range 7% to 100%) | 0.00 | 54.50 |
-| Labs choose, reward off, α 0.8 | labs choose when to publish · α 0.8 · m 0 · m_bit 0 · f 0 | 4.60 ± 0.70 of 8 | $0.18 (10 of 10 got there) | $0.62 | 2.70 | 0.90 | 0.00 | 0.70 | 63% (95% range 31% to 94%) | 0.00 | 143.46 |
-| Labs choose, reward off, α 0.2 | labs choose when to publish · α 0.2 · m 0 · m_bit 0 · f 0 | 4.80 ± 0.92 of 8 | $0.21 (10 of 10 got there) | $0.61 | 3.00 | 1.40 | 0.00 | 1.60 | 93% (95% range 84% to 100%) | 0.00 | 79.84 |
+| Labs choose, reward off, α 1 | labs choose when to publish · α 1 · m 0 · m_bit 0 · f 0 | 4.10 ± 1.10 of 8 | $0.06 (10 of 10 got there) | $0.31 | 0.70 | 0.30 | 0.00 | 1.20 | 58% (95% range 7% to 100%) | 0.00 | 54.50 |
+| Labs choose, reward off, α 0.8 | labs choose when to publish · α 0.8 · m 0 · m_bit 0 · f 0 | 4.60 ± 0.70 of 8 | $0.09 (10 of 10 got there) | $0.31 | 2.70 | 0.90 | 0.00 | 0.70 | 63% (95% range 31% to 94%) | 0.00 | 143.46 |
+| Labs choose, reward off, α 0.2 | labs choose when to publish · α 0.2 · m 0 · m_bit 0 · f 0 | 4.80 ± 0.92 of 8 | $0.11 (10 of 10 got there) | $0.31 | 3.00 | 1.40 | 0.00 | 1.60 | 93% (95% range 84% to 100%) | 0.00 | 79.84 |
 
 **Design** (fixed before the run): compared Labs choose, reward off, α 1, Labs choose, reward off, α 0.8, Labs choose, reward off, α 0.2 · held the same: the same 4 agents (the single agent: the first, with all the money), $0.60 in all, Lean checks every proof · measure: the share of lemmas published at once (of those with a PUBLISH line), α 0.2 against α 1; targets proved beside it, higher is better · 10 runs per setup, not paired. Cost: $18.57 as charged.
 

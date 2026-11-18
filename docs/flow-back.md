@@ -165,7 +165,7 @@ Not told apart: every difference has a range that includes zero, and the money t
 | Targets, Spend all | +0.4 (−0.1 to +0.9) | Finding |
 | Targets, May quit | +0.0 (−0.8 to +0.8) | Finding |
 | Targets, Fair-prompt check | +0.5 (−0.4 to +1.4) | Finding |
-| Money to 7 of 11 targets, harder targets (median) | $0.727 against $0.509 (no range, 5 runs) | Lead |
+| Money to 7 of 11 targets, harder targets (median) | $0.484 against $0.335 (no range, 5 runs; repriced) | Lead |
 | Earlier leads (cheapest to 5 targets; B5 11 of 20 vs 0 of 20) | Did not hold in later runs | – |
 
 About half of all lemmas are never cited, so extra groundwork helps only where a target lacks it.

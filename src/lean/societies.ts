@@ -3,6 +3,7 @@
 // against targets Lean has verified, one line per society.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { referenceCost } from './prices.ts';
 import { LEAN_REWARDS, charged, countedOf, mintOf, progress, spendTo, stats, type CommunityOptions, type CommunityResult, type Rules } from './community.ts';
 import { lineChart } from '../report/figures.ts';
 import { writeCard } from '../card.ts';
@@ -227,9 +228,10 @@ export function writeSocieties(id: string, runs: SocietyRun[], k: number, note =
       moneyMeasure ? 'Money to a count is all labs together, to the end of the round that reached it. Medians have ranges of at least 95% from the sorted runs; differences of medians have 95% ranges from resampling the runs; runs are not paired. Other table values are mean ± standard deviation.' : 'Table values are mean ± standard deviation over runs. Above: means with 95% ranges (Student t), and differences between setups with their 95% ranges; runs are not paired.',
       ...(keys.includes('planner') ? ['Planner with a good strategy has advantages the other setups lack: its prompt says how to split the work, and it sees what each lab tried last round and why it failed. A win for it may come from these hints rather than from coordination. Lab 1 only plans, so three labs prove and most of its money stays unspent.'] : []),
       ...(keys.includes('planner-plain') ? ['The plain planner has the same information as the labs (no strategy advice, no failure reports). Lab 1 only plans, so three labs prove.'] : []),
+      ...(runs.some((r) => r.result.actions.some((a) => a.usage && referenceCost(a.model, a.usage) !== null)) ? ['Money in the results is tokens at a fixed reference price per model (src/lean/prices.ts), not what the provider charged on the day, so runs on different days compare. The cost below is what was charged.'] : []),
       ...(runs.some((r) => r.result.stopped) ? [`Some runs stopped early (${[...new Set(runs.map((r) => r.result.stopped).filter(Boolean))].join(', ')}); their money counts as spent up to the stop.`] : []),
     ],
-    cost: stub ? '$0 (stand-in agents; dollars are a fixed $0.01 a call)' : local ? '$0 (local models)' : `$${f2(runs.reduce((a, r) => a + stats(r.result).spent, 0))} ${priced}`,
+    cost: stub ? '$0 (stand-in agents; dollars are a fixed $0.01 a call)' : local ? '$0 (local models)' : `$${f2(runs.reduce((a, r) => a + r.result.actions.reduce((x, y) => x + (y.cost ?? y.listCost ?? 0), 0), 0))} ${priced}`,
     page: `results/community/${id}/summary.md`,
     chart: `results/community/${id}/figures/progress.svg`,
   }, `${note}

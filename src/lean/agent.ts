@@ -17,6 +17,8 @@ export interface ModelSettings {
   provider: Provider; model: string; effort: 'low' | 'medium' | 'high' | 'max'; maxTokens: number;
   /** OpenRouter only: use only companies that cost at most this many times the cheapest one, for our kind of work. Default 2. */
   priceCap?: number;
+  /** OpenRouter only: the companies allowed to serve the calls (tags); set, it replaces the price cap. */
+  providers?: string[];
 }
 
 /** OpenRouter's API; OPENROUTER_URL points it elsewhere (the fault tests use a fake server). */
@@ -157,7 +159,7 @@ export function openRouterChat(settings: ModelSettings): Chat {
   const key = process.env.OPENROUTER_API_KEY;
   if (!key) throw new Error('OPENROUTER_API_KEY is not set');
   return async (system, messages) => {
-    const cap = settings.priceCap ?? 2, allowed = await companiesFor(settings.model, cap, settings.maxTokens);
+    const cap = settings.priceCap ?? 2, allowed = settings.providers?.length ? settings.providers.map((tag) => ({ tag, name: tag })) : await companiesFor(settings.model, cap, settings.maxTokens);
     const body = {
       model: settings.model,
       max_tokens: settings.maxTokens,

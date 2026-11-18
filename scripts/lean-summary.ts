@@ -16,6 +16,9 @@ for (let rep = 1; rep <= plan.repeats; rep++) for (const key of plan.societies) 
 // The card keeps the date it was first written, so the results index stays in order.
 const cardFile = join('results', 'community', id, 'card.json');
 const date = existsSync(cardFile) ? JSON.parse(readFileSync(cardFile, 'utf8')).date : null;
-const dir = writeSocieties(id, runs, plan.k, process.argv[3] ?? '');
+// Without a design note given, the one in the current summary is kept (the paragraph just before the graph).
+const summaryFile = join('results', 'community', id, 'summary.md');
+const kept = existsSync(summaryFile) ? /<summary>Details<\/summary>\n\n([\s\S]*?)\n\n!\[Verified targets/.exec(readFileSync(summaryFile, 'utf8'))?.[1] ?? '' : '';
+const dir = writeSocieties(id, runs, plan.k, process.argv[3] ?? kept);
 if (date) { const card = JSON.parse(readFileSync(cardFile, 'utf8')); writeFileSync(cardFile, JSON.stringify({ ...card, date }, null, 1) + '\n'); writeIndex(); }
 console.log(`${dir}/summary.md`);

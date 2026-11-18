@@ -20,8 +20,11 @@
 //     --societies choose-1,choose-0.8,choose-0.2: labs choose what to publish, with the knowledge reward by proof size
 //     --societies choose-off-1,choose-off-0.8,choose-off-0.2: the same with the knowledge reward off (these setups set it; --knowledge does not change a choose setup)
 //     --follow F                  money follows earnings: released round by round, a share F of it by recent earnings (0: equal); unset: a fixed budget per lab
+//     --pricing reference|charged (reference): budgets count tokens at the model's fixed reference price (src/lean/prices.ts), or what the provider charged
+//     --providers TAG,...         OpenRouter companies allowed to serve the calls (e.g. deepinfra/fp8); default: any within the price cap
 //     --may-stop yes|no (yes): may a lab pass and stop early? no: every lab works until its money or the rounds run out
 import { chatFor, creditLeft, DEFAULT_MODEL, DEFAULT_MODELS, defaultProvider, type Provider } from './agent.ts';
+import { referenceCost } from './prices.ts';
 import { estimate, readRun, writeComparison, referenceChat, runPilot, writeMeasuredWorld, writeSummary, type Condition, type PilotOptions } from './pilot.ts';
 import { selftest } from './selftest.ts';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -97,7 +100,7 @@ if (cmd === 'community') {
   const agents = pick('agents', 'deepseek/deepseek-v4.1-flash,google/gemini-3.8-flash,openai/gpt-5.6-terra,deepseek/deepseek-v4.1-flash').split(',');
   const base = {
     agents, budget: Number(pick('budget', '0.5')), rounds: Number(pick('rounds', '30')), repairs: Number(pick('repairs', '2')),
-    alpha: 0.8, mint: 1, knowledge: pick('knowledge', 'off') as 'off' | 'flat-mint' | 'proof-size', split: 'lines-saved' as const, ...(pick('follow', '') !== '' ? { follow: Number(pick('follow', '')) } : {}), effort: pick('effort', 'medium') as 'low' | 'medium' | 'high', allowGrind: stub,
+    alpha: 0.8, mint: 1, knowledge: pick('knowledge', 'off') as 'off' | 'flat-mint' | 'proof-size', split: 'lines-saved' as const, pricing: pick('pricing', 'reference') as 'reference' | 'charged', ...(pick('providers', '') ? { providers: pick('providers', '').split(',') } : {}), ...(pick('follow', '') !== '' ? { follow: Number(pick('follow', '')) } : {}), effort: pick('effort', 'medium') as 'low' | 'medium' | 'high', allowGrind: stub,
     personas: (cfg.personas as string[] | undefined) ?? [],
     personaNames: (cfg.personaNames as string[] | undefined) ?? [],
     repairsByLab: cfg.repairsByLab as number[] | undefined,
@@ -121,12 +124,17 @@ if (cmd === 'community') {
   if (!stub && remote.length && !process.env.OPENROUTER_API_KEY) { console.error('Set OPENROUTER_API_KEY in .env (or use --stub, or local: models).'); process.exit(1); }
   const prices = stub ? null : remote.length ? await listPrices(remote) : {};
   // Budgets count what OpenRouter charged; list prices understate it (about 5x in October 2026), so they are only a fallback.
-  const price = (m: string, u: { input: number; output: number; cacheRead: number; cacheWrite: number; cost?: number }) => (!prices ? 0.01 : isLocal(m) ? localPrice(u) : u.cost ?? (u.input + u.cacheRead) * prices[m].input + u.output * prices[m].output);
+  // With --pricing reference (the default), at the model's fixed reference price when it has one, so money means the same on any day.
+  const price = (m: string, u: { input: number; output: number; cacheRead: number; cacheWrite: number; cost?: number }) => (!prices ? 0.01 : isLocal(m) ? localPrice(u)
+    : (base.pricing === 'reference' ? referenceCost(m, u) : null) ?? u.cost ?? (u.input + u.cacheRead) * prices[m].input + u.output * prices[m].output);
   if (!stub && remote.length) {
     // Refuse to start a test the key cannot pay for: running out midway makes the result useless.
     // Only the runs still to do (--from-rep skips the ones done earlier).
-    const most = rules.length * agents.length * base.budget * (Number(pick('repeats', '1')) - Number(pick('from-rep', '1')) + 1);
+    let most = rules.length * agents.length * base.budget * (Number(pick('repeats', '1')) - Number(pick('from-rep', '1')) + 1);
     const left = await creditLeft(process.env.OPENROUTER_API_KEY!);
+    // At the reference price, budgets can buy tokens that cost more on the day (2026-11-17: the cheapest company
+    // charged about twice DeepSeek's reference price), so the credit must cover that too.
+    if (base.pricing === 'reference') most *= 2.5;
     if (left != null && left < most * 1.1) { console.error(`The key has $${left.toFixed(2)} left; this test can spend up to $${most.toFixed(2)}. Add credit first.`); process.exit(1); }
   }
   const id = pick('run', `${stub ? 'stub-' : ''}community-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-')}`);
@@ -135,7 +143,7 @@ if (cmd === 'community') {
     const m = com.opts.agents[i];
     return stub ? referenceAgent(com, i)
       : isLocal(m) ? localChat({ provider: 'local', model: m.slice(LOCAL_PREFIX.length), effort: base.effort, maxTokens: Number(pick('max-tokens', '8000')) })
-      : openRouterChat({ provider: 'openrouter', model: m, effort: com.opts.effortByLab?.[i] ?? base.effort, maxTokens: 32_000 });
+      : openRouterChat({ provider: 'openrouter', model: m, effort: com.opts.effortByLab?.[i] ?? base.effort, maxTokens: 32_000, providers: base.providers });
   };
   if (societies.length) {
     // Paired runs: run k of every society before run k + 1 of any, so a stop midway leaves complete pairs.

@@ -18,7 +18,7 @@ Last updated: 2026-11-12. Plain summaries; each links to its full result. **Find
 
 - **Finding, labs choose what to publish (M3, 10 runs per setup):** AI labs published nearly every lemma at every α (99–100%; the simulation predicted 17% at α 1 and 93% at α 0.2). Their thinking shows why: the new-result reward is paid only on publishing, and they rarely weigh helping rivals. **Lead:** B5 proved in 8 of 10 runs at α 0.2, 4 of 10 at α 1. [Results](ai-agent-results.md)
 
-- **Lead, harder targets (6 setups × 5 runs, 2026-11-09; too few runs for ranges):** setups that publish at once proved 10.4 to 11 of 11 targets, traditional 7.6. The planner with a good strategy was cheapest, but without our hints it was among the worst. Flow-back alone (OSO α 0.2 against the shared library) gave no gain. [Results](ai-agent-results.md)
+- **Lead, harder targets (6 setups × 5 runs, 2026-11-09; too few runs for ranges):** setups that publish at once proved 10.4 to 11 of 11 targets, traditional 7.6, but traditional ran at a higher price per token, so it had about a quarter less thinking; at the same price it reached 7 targets for $0.42, against $0.34 (shared library) and $0.48 (OSO α 0.2). The planner with a good strategy was cheapest, but without our hints it was among the worst. Flow-back alone (OSO α 0.2 against the shared library) gave no gain. [Results](ai-agent-results.md)
 
 - **Lead, labs' saved thinking (148 runs):** under flow-back, labs restate the rule and reason that a lemma earns when another lab uses it; in the shared library, that it earns nothing and may hand a rival the bounty. This shows they read the rule, not that it drives their choices. [Flow-back so far](flow-back.md)
 

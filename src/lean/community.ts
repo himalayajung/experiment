@@ -21,6 +21,7 @@ import { join } from 'node:path';
 import { check, type CheckOptions } from './checker.ts';
 import { definitions, FREE, LEAN_DIR, loadTasks, parseReference, type Problems, type Task } from './tasks.ts';
 import { OPENROUTER_API, type Chat, type Usage } from './agent.ts';
+import { referenceCost } from './prices.ts';
 import { referenceProof } from './selftest.ts';
 import { lineChart } from '../report/figures.ts';
 import { writeCard } from '../card.ts';
@@ -91,6 +92,12 @@ export interface CommunityOptions {
   /** How value flowing back is split among the results a proof used: by the lines each saves (its own proof's
    *  length in symbols; runs from 2026-11-08), or by the money spent proving it (earlier runs, which have no such field). */
   split?: 'lines-saved' | 'cost';
+  /** What budgets count: tokens at the model's reference price (prices.ts; runs from 2026-11-17), or what the
+   *  provider charged (earlier runs, which have no such field). */
+  pricing?: 'reference' | 'charged';
+  /** OpenRouter companies allowed to serve the calls (tags such as 'deepinfra/fp8'), so the served model stays
+   *  the same through a run; none: any within the price cap. */
+  providers?: string[];
   /**
    * Money follows earnings, as in the simulation (docs/equations.md, section 5): the funder releases the money
    * round by round, the same amount each round (all labs' money / rounds); a share 1 − follow of it is split equally
@@ -623,8 +630,9 @@ export function referenceAgent(com: Community, i: number): Chat {
 
 export interface CommunityResult { opts: CommunityOptions; actions: Action[]; library: Entry[]; earnings: number[]; spent: number[]; /** Why the run ended early, if it did (for example, out of credit). */ stopped?: string }
 
-/** What an action cost: the charge, or the list price for runs recorded before charges were used. */
-export const costOf = (a: Action) => a.cost ?? a.listCost ?? 0;
+/** What an action cost: its tokens at the model's reference price (prices.ts), so runs on different days compare;
+ *  for a model without one, the charge, or the list price for runs recorded before charges were used. */
+export const costOf = (a: Action) => (a.usage ? referenceCost(a.model, a.usage) : null) ?? a.cost ?? a.listCost ?? 0;
 /** Whether a run's money is the provider's charge (true) or list prices (older runs). */
 export const charged = (r: CommunityResult) => r.actions.every((a) => a.cost !== undefined);
 
@@ -742,7 +750,7 @@ export function stats(r: CommunityResult) {
     deepestTarget: deepest,
     /** Value gained: the prizes of the targets solved (4 at depth 1, doubling with each level). */
     value: [...solved].reduce((a, id) => a + 4 * 2 ** ((loadTasks(r.opts.problems).find((t) => t.publicId === id)?.depth ?? 1) - 1), 0),
-    spent: r.spent.reduce((a, b) => a + b, 0),
+    spent: r.actions.reduce((a, x) => a + costOf(x), 0),
     budget: r.opts.budget * r.opts.agents.length,
     actions: r.actions.length,
     lemmasAccepted: lemmas.filter((a) => a.ok && !/trivial/.test(a.reason ?? '')).length,
