@@ -83,9 +83,19 @@ export const localPrice = (u: Usage) => ((u.input + u.cacheRead) * LOCAL_PRICE.i
  * A model on this machine, served by Ollama (for testing at no cost). Streamed, so a long reply
  * doesn't hit fetch's 5-minute wait for the first byte. Its thinking is dropped from the reply when there is an answer.
  */
-// One local call at a time: labs in a community call in parallel, and two copies of a model's
+// By default one local call at a time: labs in a community call in parallel, and two copies of a model's
 // working memory do not fit on a 24 GB machine next to Lean and Mathlib.
-let localQueue: Promise<unknown> = Promise.resolve();
+// LOCAL_PARALLEL lets several calls run at once (1 by default): with Ollama started with OLLAMA_NUM_PARALLEL, one
+// copy of the model serves them together, and the total speed rises (M4, 24 GB, 8B prover: 18 tokens/s for one call,
+// 82 for 8 at once; 2026-11-17). Each call still needs its own working memory, so long contexts allow fewer.
+const LOCAL_PARALLEL = Math.max(1, Number(process.env.LOCAL_PARALLEL ?? 1));
+let localRunning = 0;
+const localWaiting: (() => void)[] = [];
+async function localSlot<T>(f: () => Promise<T>): Promise<T> {
+  if (localRunning >= LOCAL_PARALLEL) await new Promise<void>((go) => localWaiting.push(go));
+  localRunning++;
+  try { return await f(); } finally { localRunning--; localWaiting.shift()?.(); }
+}
 
 export function localChat(settings: ModelSettings): Chat {
   const url = process.env.OLLAMA_URL ?? 'http://localhost:11434';
@@ -144,11 +154,7 @@ export function localChat(settings: ModelSettings): Chat {
       throw e;
     } finally { clearTimeout(idle); }
   };
-  return (system, messages) => {
-    const next = localQueue.then(() => one(system, messages));
-    localQueue = next.catch(() => {});
-    return next;
-  };
+  return (system, messages) => localSlot(() => one(system, messages));
 }
 
 /**
