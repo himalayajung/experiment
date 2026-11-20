@@ -5,7 +5,7 @@ import { FREE, loadTasks, parseReference, type Task } from './tasks.ts';
 
 export function libraryFor(task: Task, tasks: Task[]) {
   const ref = parseReference();
-  const free = FREE.map((name) => ({ name, ...ref.get(name)! }));
+  const free = FREE.filter((name) => ref.has(name)).map((name) => ({ name, ...ref.get(name)! }));
   return [...free, ...tasks.filter((t) => task.ancestors.includes(t.name))];
 }
 

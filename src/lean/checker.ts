@@ -7,7 +7,7 @@ import { execFile, execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { asAxiom, LEAN_DIR, type Task } from './tasks.ts';
+import { asAxiom, DEFAULT_PROBLEMS, LEAN_DIR, type Problems, type Task } from './tasks.ts';
 
 /** Lean's own axioms, which any proof may use. */
 export const STANDARD_AXIOMS = ['propext', 'Classical.choice', 'Quot.sound'];
@@ -18,6 +18,8 @@ export interface CheckOptions {
   /** Allow `grind` (a decision of the experiment; banned by default). */
   allowGrind?: boolean;
   timeoutMs?: number;
+  /** Which problem set's definitions the attempt is checked against (default: OSO_PROBLEMS, else main). */
+  problems?: Problems;
 }
 
 export interface CheckResult {
@@ -53,9 +55,9 @@ export function banned(proof: string, allowGrind = false): string[] {
 }
 
 /** The checked file: definitions, the library as axioms, the attempt, and the axioms it uses. */
-export function checkFile(task: Pick<Task, 'ns' | 'signature'>, proof: string, library: CheckOptions['library']): { text: string; firstProofLine: number } {
+export function checkFile(task: Pick<Task, 'ns' | 'signature'>, proof: string, library: CheckOptions['library'], problems: Problems = DEFAULT_PROBLEMS): { text: string; firstProofLine: number } {
   const head = [
-    'import Problems.Defs',
+    problems === 'big' ? 'import Problems.BigDefs' : 'import Problems.Defs',
     'set_option autoImplicit false',
     '',
     '-- The agent\'s library: theorems proved earlier, stated as axioms.',
@@ -141,7 +143,7 @@ export async function check(task: Pick<Task, 'ns' | 'signature'>, proof: string,
   const t0 = Date.now();
   const bad = banned(proof, opts.allowGrind);
   if (bad.length) return { ok: false, errors: bad, uses: [], seconds: 0 };
-  const { text, firstProofLine } = checkFile(task, proof, opts.library);
+  const { text, firstProofLine } = checkFile(task, proof, opts.library, opts.problems);
   const c = await compileAndRead(LEAN_DIR, join(LEAN_DIR, '.pilot'), text, `${task.ns}.attempt`, opts.timeoutMs ?? 120_000);
   const seconds = (Date.now() - t0) / 1000;
   if (c.timedOut) return { ok: false, errors: ['Lean timed out checking the proof'], uses: [], seconds };

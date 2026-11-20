@@ -19,7 +19,7 @@ export interface Task {
   /** The reference proof, starting at `:=` or the first `|` (used only to test the harness). */
   reference: string;
   depth: number;
-  area: 'A' | 'B' | 'C' | 'cross';
+  area: 'A' | 'B' | 'C' | 'D' | 'cross';
   /** Posted target id (A3, …), or '' for a hidden lemma. */
   posted: string;
   /** Anonymous public id, the same as in worlds/lean-reference.json (posted targets keep their id). */
@@ -31,12 +31,15 @@ export interface Task {
 }
 
 /** Definitional lemmas (proved by rfl): free for everyone, as part of the definitions. */
-export const FREE = ['OSO.u_succ_succ'];
+export const FREE = ['OSO.u_succ_succ', 'OSO.L_succ_succ']; // L_succ_succ: bigger set only (used where the set has it)
 
 // The harder targets are a separate set, so that the runs made on the main set keep their meaning.
-export type Problems = 'main' | 'hard';
-const DEFAULT_PROBLEMS: Problems = process.env.OSO_PROBLEMS === 'hard' ? 'hard' : 'main';
-const filesOf = (problems: Problems): [string, Task['area']][] => [['A', 'A'], ['B', 'B'], ['C', 'C'], ['Cross', 'cross'], ...(problems === 'hard' ? [['Hard', 'cross'] as [string, Task['area']]] : [])];
+// The bigger set (2026-11-20) keeps the main set's 8 targets and adds areas D (search trees) and E (counting).
+export type Problems = 'main' | 'hard' | 'big';
+export const DEFAULT_PROBLEMS: Problems = process.env.OSO_PROBLEMS === 'hard' ? 'hard' : process.env.OSO_PROBLEMS === 'big' ? 'big' : 'main';
+const filesOf = (problems: Problems): [string, Task['area']][] => [['A', 'A'], ['B', 'B'], ['C', 'C'], ['Cross', 'cross'],
+  ...(problems === 'hard' ? [['Hard', 'cross'] as [string, Task['area']]] : []),
+  ...(problems === 'big' ? [['BigA', 'A'], ['BigAC', 'cross'], ['BigDE', 'D']] as [string, Task['area']][] : [])];
 
 /** Lean is on this machine and the checker is built: what the tests that run Lean need. */
 export function leanReady(): boolean {
@@ -77,7 +80,7 @@ export function parseReference(problems: Problems = DEFAULT_PROBLEMS): Map<strin
 export function loadTasks(problems: Problems = DEFAULT_PROBLEMS): Task[] {
   const src = parseReference(problems);
   const rows: { depth: number; name: string; area: Task['area']; posted: string; uses: string[] }[] = [];
-  for (const line of ['reference-dag.md', ...(problems === 'hard' ? ['reference-dag-hard.md'] : [])].flatMap((f) => readFileSync(join(LEAN_DIR, f), 'utf8').split('\n'))) {
+  for (const line of (problems === 'big' ? ['reference-dag-big.md'] : ['reference-dag.md', ...(problems === 'hard' ? ['reference-dag-hard.md'] : [])]).flatMap((f) => readFileSync(join(LEAN_DIR, f), 'utf8').split('\n'))) {
     if (!/^\| \d/.test(line)) continue;
     const [depth, name, area, posted, uses] = line.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
     const q = (n: string) => `OSO.${n.replace(/`/g, '')}`;
@@ -94,7 +97,7 @@ export function loadTasks(problems: Problems = DEFAULT_PROBLEMS): Task[] {
   for (const r of rows) if (r.posted) postedRows.set(r.posted, [...(postedRows.get(r.posted) ?? []), r]);
   for (const group of postedRows.values()) group.sort((a, b) => a.depth - b.depth).slice(0, -1).forEach((r) => { r.posted = ''; });
   const sorted = [...rows].sort((a, b) => a.depth - b.depth || a.area.localeCompare(b.area) || a.name.slice(4).localeCompare(b.name.slice(4)));
-  const letter = { A: 'A', B: 'B', C: 'C', cross: 'X' } as const;
+  const letter = { A: 'A', B: 'B', C: 'C', D: 'D', cross: 'X' } as const;
   const counts: Record<string, number> = {};
   const ids = new Map<string, string>();
   for (const r of sorted) {
@@ -136,9 +139,13 @@ export const AREAS: Record<string, string> = {
   A: 'A number sequence: u(0) = 0, u(1) = 1, u(n+2) = 5·u(n+1) + 3·u(n), so 0, 1, 5, 28, 155, …',
   B: 'Sorting: insertion sort and merge sort on lists of numbers.',
   C: '2×2 integer matrices: product, determinant, powers.',
+  D: 'Search trees and counting (bigger set): insertion into a search tree, tree sort, lists with the same counts, sums.',
   cross: 'Mixes two areas.',
 };
 
-export function definitions(): string {
-  return readFileSync(join(LEAN_DIR, 'Problems', 'Defs.lean'), 'utf8');
+/** The definitions agents see: the main set's, and for the bigger set its additions too. */
+export function definitions(problems: Problems = DEFAULT_PROBLEMS): string {
+  const main = readFileSync(join(LEAN_DIR, 'Problems', 'Defs.lean'), 'utf8');
+  if (problems !== 'big') return main;
+  return main.trimEnd() + '\n\n' + readFileSync(join(LEAN_DIR, 'Problems', 'BigDefs.lean'), 'utf8').replace(/^import .*\n/m, '');
 }

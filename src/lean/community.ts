@@ -255,7 +255,7 @@ export class Community {
     this.released = opts.agents.map(() => 0);
     this.recent = opts.agents.map(() => 0);
     const ref = parseReference(opts.problems);
-    this.free = FREE.map((name) => ({ name, ...ref.get(name)! }));
+    this.free = FREE.filter((name) => ref.has(name)).map((name) => ({ name, ...ref.get(name)! }));
   }
 
   bounty(t: Task) { return 4 * 2 ** (t.depth - 1); }
@@ -353,7 +353,7 @@ ${rules}
 The definitions:
 
 \`\`\`lean
-${definitions().trim()}
+${definitions(this.opts.problems ?? 'main').trim()}
 \`\`\`
 
 Proof rules: core lemmas and tactics such as simp, omega, decide, induction, cases and rw may be used. Not allowed: sorry, admit, native_decide, grind, search tactics (exact?, apply?), commands and set_option. Cite library results by the names shown. A lemma that a single basic tactic proves (rfl, decide, simp, omega) counts as trivial: you may cite it${M ? ', but it earns no mint' : ''}.
@@ -403,7 +403,7 @@ Results are published at once and every lab can cite them.${o.plainPlanner ? '' 
 The definitions:
 
 \`\`\`lean
-${definitions().trim()}
+${definitions(this.opts.problems ?? 'main').trim()}
 \`\`\`
 
 Reply with one line per lab, and nothing else:
@@ -479,7 +479,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
           const visibleDone = this.provedConjecture(k.cid);
           if (visibleDone && (visibleDone.public || visibleDone.author === i)) errors = [`${k.cid} is already proved: cite it as ${visibleDone.name}.`];
           else {
-            const r = await check(k, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind });
+            const r = await check(k, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
             errors = r.errors;
             if (r.ok) {
               ok = true;
@@ -496,7 +496,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
         const t = this.targets.find((x) => x.publicId === target);
         if (!t) errors = [`There is no target ${target}.`];
         else {
-          const r = await check(t, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind });
+          const r = await check(t, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
           errors = r.errors;
           if (r.ok) {
             ok = true;
@@ -515,12 +515,12 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
         if (!lemma) errors = [/^\s*(?:theorem|lemma)\s+[\w']+\./.test(code) ? 'Lemma names cannot contain a dot: use a plain name such as pow_add.' : 'Give the whole declaration: theorem <name> <statement> := <proof>.'];
         else if (this.targets.some((t) => norm(t.signature) === norm(lemma!.signature))) errors = ['That is a posted target: use ACTION: target <ID> instead.'];
         else {
-          const r = await check({ ns: 'OSO', signature: lemma.signature }, lemma.proof.replace(new RegExp(`(?<![\\w.])${lemma.name}(?![\\w'])`, 'g'), 'attempt'), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind });
+          const r = await check({ ns: 'OSO', signature: lemma.signature }, lemma.proof.replace(new RegExp(`(?<![\\w.])${lemma.name}(?![\\w'])`, 'g'), 'attempt'), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
           errors = r.errors;
           if (r.ok) {
             // The trivial-result screen: a statement one basic tactic proves earns nothing.
             let trivial = false;
-            for (const tac of TRIVIAL) if ((await check({ ns: 'OSO', signature: lemma.signature }, tac, { library: [] })).ok) { trivial = true; break; }
+            for (const tac of TRIVIAL) if ((await check({ ns: 'OSO', signature: lemma.signature }, tac, { library: [], problems: this.opts.problems })).ok) { trivial = true; break; }
             // A restatement of a published result (renamed variables, say) is not new: one step from it proves it.
             // Checked before the duplicate test and the name, so nothing waits between those and joining the library: two labs in one round must not take the same name.
             let known = false;

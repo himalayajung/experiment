@@ -28,9 +28,9 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 1 | `M2.mul_one` | C |  | — |
 | 1 | `M2.one_mul` | C |  | — |
 | 1 | `M2.pow_succ_succ` | C |  | — |
-| 1 | `all_iff_mem` | D/E |  | — |
-| 1 | `all_insert` | D/E |  | — |
-| 1 | `lsum_ins` | D/E |  | — |
+| 1 | `all_iff_mem` | D |  | — |
+| 1 | `all_insert` | D |  | — |
+| 1 | `lsum_ins` | D |  | — |
 | 1 | `U_pow` | cross |  | — |
 | 1 | `comp_pow` | cross | C6 | — |
 | 2 | `L_coprime_succ` | A |  | `coprime_q_L` |
@@ -43,12 +43,12 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 2 | `pairwise_unique` | B |  | `cnt_pos_iff_mem` |
 | 2 | `M2.det_pow` | C | C5 | `M2.det_mul`, `M2.det_one` |
 | 2 | `M2.pow_add` | C |  | `M2.mul_assoc`, `M2.mul_one` |
-| 2 | `L_mono` | D/E |  | `L_le_succ` |
-| 2 | `cnt_inorder_insert` | D/E |  | `cnt_append` |
-| 2 | `cnt_reverse` | D/E |  | `cnt_append` |
-| 2 | `inorder_pairwise` | D/E |  | `all_iff_mem` |
-| 2 | `lsum_isort` | D/E | E3 | `lsum_ins` |
-| 2 | `search_insert` | D/E | D1 | `all_insert` |
+| 2 | `L_mono` | D |  | `L_le_succ` |
+| 2 | `cnt_inorder_insert` | D |  | `cnt_append` |
+| 2 | `cnt_reverse` | D |  | `cnt_append` |
+| 2 | `inorder_pairwise` | D |  | `all_iff_mem` |
+| 2 | `lsum_isort` | D | E3 | `lsum_ins` |
+| 2 | `search_insert` | D | D1 | `all_insert` |
 | 2 | `u_mono` | cross |  | `u_le_succ` |
 | 3 | `L_gcd_add` | A |  | `L_add`, `L_coprime_succ`, `coprime_q_L` |
 | 3 | `coprime_three_u` | A |  | `u_not_three_dvd` |
@@ -57,32 +57,32 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 3 | `msort_pairwise` | B |  | `cnt_append`, `cnt_merge`, `merge_pairwise` |
 | 3 | `sorted_unique` | B |  | `pairwise_unique`, `sorted_iff_pairwise` |
 | 3 | `M2.pow_mul` | C | C4 | `M2.pow_add` |
-| 3 | `firstN_pairwise` | D/E |  | `L_mono` |
-| 3 | `inorder_sorted` | D/E | D2 | `inorder_pairwise`, `sorted_iff_pairwise` |
-| 3 | `same_reverse` | D/E | E1 | `cnt_reverse` |
-| 3 | `search_ofList` | D/E |  | `search_insert` |
+| 3 | `firstN_pairwise` | D |  | `L_mono` |
+| 3 | `inorder_sorted` | D | D2 | `inorder_pairwise`, `sorted_iff_pairwise` |
+| 3 | `same_reverse` | D | E1 | `cnt_reverse` |
+| 3 | `search_ofList` | D |  | `search_insert` |
 | 3 | `cassini` | cross | X1 | `M2.det_pow`, `U_pow` |
 | 3 | `det_comp_pow` | cross | X3 | `M2.det_pow` |
 | 4 | `L_gcd_add_mul` | A |  | `L_gcd_add` |
 | 4 | `u_coprime_succ` | A |  | `coprime_three_u` |
 | 4 | `isort_sorted` | B | B3 | `ins_sorted` |
-| 4 | `inorder_insert` | D/E |  | `cnt_inorder_insert`, `cnt_ins`, `inorder_sorted`, `ins_sorted`, `search_insert`, `sorted_unique` |
-| 4 | `same_msort` | D/E | E2 | `msort_pairwise` |
+| 4 | `inorder_insert` | D |  | `cnt_inorder_insert`, `cnt_ins`, `inorder_sorted`, `ins_sorted`, `search_insert`, `sorted_unique` |
+| 4 | `same_msort` | D | E2 | `msort_pairwise` |
 | 4 | `cassini_L` | cross | X6 | `comp_pow`, `det_comp_pow` |
 | 5 | `L_gcd` | A | A7 | `L_gcd_add_mul` |
 | 5 | `u_gcd_add` | A |  | `coprime_three_u`, `u_add`, `u_coprime_succ` |
 | 5 | `msort_eq_isort` | B | B5 | `cnt_isort`, `isort_sorted`, `msort_pairwise`, `pairwise_unique`, `sorted_iff_pairwise` |
-| 5 | `isort_eq_iff` | D/E | E4 | `cnt_isort`, `isort_sorted`, `sorted_unique` |
-| 5 | `isort_firstN` | D/E | X7 | `cnt_isort`, `firstN_pairwise`, `isort_sorted`, `pairwise_unique`, `sorted_iff_pairwise` |
-| 5 | `tsort_eq_isort` | D/E | D3 | `inorder_insert`, `search_ofList` |
+| 5 | `isort_eq_iff` | D | E4 | `cnt_isort`, `isort_sorted`, `sorted_unique` |
+| 5 | `isort_firstN` | D | X7 | `cnt_isort`, `firstN_pairwise`, `isort_sorted`, `pairwise_unique`, `sorted_iff_pairwise` |
+| 5 | `tsort_eq_isort` | D | D3 | `inorder_insert`, `search_ofList` |
 | 5 | `isort_u` | cross | X2 | `cnt_isort`, `isort_sorted`, `pairwise_unique`, `sorted_iff_pairwise`, `u_mono` |
 | 6 | `u_gcd_add_mul` | A |  | `u_gcd_add` |
 | 6 | `v_gcd` | A | F3 | `L_gcd` |
-| 6 | `isort_same_firstN` | D/E | X5 | `isort_eq_iff`, `isort_firstN` |
-| 6 | `lsum_same` | D/E |  | `isort_eq_iff`, `lsum_isort` |
-| 6 | `tsort_firstN` | D/E | X4 | `isort_firstN`, `tsort_eq_isort` |
+| 6 | `isort_same_firstN` | D | X5 | `isort_eq_iff`, `isort_firstN` |
+| 6 | `lsum_same` | D |  | `isort_eq_iff`, `lsum_isort` |
+| 6 | `tsort_firstN` | D | X4 | `isort_firstN`, `tsort_eq_isort` |
 | 7 | `u_gcd` | A | A5 | `u_gcd_add_mul` |
-| 7 | `lsum_msort` | D/E | E5 | `lsum_same`, `same_msort` |
+| 7 | `lsum_msort` | D | E5 | `lsum_same`, `same_msort` |
 
 78 theorems; maximum depth 7.
 

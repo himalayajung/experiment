@@ -11,27 +11,27 @@ namespace OSO
 
 open Tree
 
-theorem all_insert (P : Nat → Prop) (x : Nat) (hx : P x) : ∀ t, All P t → All P (Tree.insert x t)
-  | leaf, _ => ⟨trivial, hx, trivial⟩
-  | node l y r, ⟨hl, hy, hr⟩ => by
+theorem all_insert (P : Nat → Prop) (x : Nat) (hx : P x) : ∀ t, Tree.All P t → Tree.All P (Tree.insert x t)
+  | Tree.leaf, _ => ⟨trivial, hx, trivial⟩
+  | Tree.node l y r, ⟨hl, hy, hr⟩ => by
     unfold Tree.insert
     split
     · exact ⟨all_insert P x hx l hl, hy, hr⟩
     · exact ⟨hl, hy, all_insert P x hx r hr⟩
 
 /-- Posted D1: insertion keeps a search tree a search tree. -/
-theorem search_insert (x : Nat) : ∀ t, Search t → Search (Tree.insert x t)
-  | leaf, _ => ⟨trivial, trivial, trivial, trivial⟩
-  | node l y r, ⟨hl, hr, hal, har⟩ => by
+theorem search_insert (x : Nat) : ∀ t, Tree.Search t → Tree.Search (Tree.insert x t)
+  | Tree.leaf, _ => ⟨trivial, trivial, trivial, trivial⟩
+  | Tree.node l y r, ⟨hl, hr, hal, har⟩ => by
     unfold Tree.insert
     split
     · exact ⟨search_insert x l hl, hr, all_insert _ x (by assumption) l hal, har⟩
     · exact ⟨hl, search_insert x r hr, hal, all_insert _ x (by omega) r har⟩
 
-theorem all_iff_mem (P : Nat → Prop) : ∀ t, All P t ↔ ∀ z ∈ inorder t, P z
-  | leaf => by simp [All, inorder]
-  | node l y r => by
-    simp only [All, inorder, List.mem_append, List.mem_cons, all_iff_mem P l, all_iff_mem P r]
+theorem all_iff_mem (P : Nat → Prop) : ∀ t, Tree.All P t ↔ ∀ z ∈ Tree.inorder t, P z
+  | Tree.leaf => by simp [Tree.All, Tree.inorder]
+  | Tree.node l y r => by
+    simp only [Tree.All, Tree.inorder, List.mem_append, List.mem_cons, all_iff_mem P l, all_iff_mem P r]
     constructor
     · rintro ⟨hl, hy, hr⟩ z (hz | rfl | hz)
       · exact hl z hz
@@ -40,12 +40,12 @@ theorem all_iff_mem (P : Nat → Prop) : ∀ t, All P t ↔ ∀ z ∈ inorder t,
     · intro h
       exact ⟨fun z hz => h z (Or.inl hz), h y (Or.inr (Or.inl rfl)), fun z hz => h z (Or.inr (Or.inr hz))⟩
 
-theorem inorder_pairwise : ∀ t, Search t → (inorder t).Pairwise (· ≤ ·)
-  | leaf, _ => List.Pairwise.nil
-  | node l y r, ⟨hl, hr, hal, har⟩ => by
+theorem inorder_pairwise : ∀ t, Tree.Search t → (Tree.inorder t).Pairwise (· ≤ ·)
+  | Tree.leaf, _ => List.Pairwise.nil
+  | Tree.node l y r, ⟨hl, hr, hal, har⟩ => by
     have al := (all_iff_mem _ l).mp hal
     have ar := (all_iff_mem _ r).mp har
-    simp only [inorder]
+    simp only [Tree.inorder]
     rw [List.pairwise_append, List.pairwise_cons]
     refine ⟨inorder_pairwise l hl, ⟨fun z hz => Nat.le_of_lt (ar z hz), inorder_pairwise r hr⟩, ?_⟩
     intro a ha b hb
@@ -54,23 +54,23 @@ theorem inorder_pairwise : ∀ t, Search t → (inorder t).Pairwise (· ≤ ·)
     · exact Nat.le_trans (al a ha) (Nat.le_of_lt (ar b hb))
 
 /-- Posted D2: the in-order list of a search tree is sorted. -/
-theorem inorder_sorted (t : Tree) (h : Search t) : Sorted (inorder t) :=
+theorem inorder_sorted (t : Tree) (h : Tree.Search t) : Sorted (Tree.inorder t) :=
   (sorted_iff_pairwise _).mpr (inorder_pairwise t h)
 
-theorem cnt_inorder_insert (a x : Nat) : ∀ t, cnt a (inorder (Tree.insert x t)) = cnt a (x :: inorder t)
-  | leaf => rfl
-  | node l y r => by
+theorem cnt_inorder_insert (a x : Nat) : ∀ t, cnt a (Tree.inorder (Tree.insert x t)) = cnt a (x :: Tree.inorder t)
+  | Tree.leaf => rfl
+  | Tree.node l y r => by
     unfold Tree.insert
     split
-    · simp only [inorder, cnt_append, cnt_inorder_insert a x l, cnt]; omega
-    · simp only [inorder, cnt_append, cnt_inorder_insert a x r, cnt]; omega
+    · simp only [Tree.inorder, cnt_append, cnt_inorder_insert a x l, cnt]; omega
+    · simp only [Tree.inorder, cnt_append, cnt_inorder_insert a x r, cnt]; omega
 
 /-- Hub H4: inserting into a search tree matches inserting into its sorted list. -/
-theorem inorder_insert (x : Nat) (t : Tree) (h : Search t) : inorder (Tree.insert x t) = ins x (inorder t) :=
+theorem inorder_insert (x : Nat) (t : Tree) (h : Tree.Search t) : Tree.inorder (Tree.insert x t) = ins x (Tree.inorder t) :=
   sorted_unique _ _ (inorder_sorted _ (search_insert x t h)) (ins_sorted x _ (inorder_sorted t h))
     (fun a => by rw [cnt_inorder_insert, cnt_ins])
 
-theorem search_ofList : ∀ l, Search (ofList l)
+theorem search_ofList : ∀ l, Tree.Search (Tree.ofList l)
   | [] => trivial
   | x :: xs => search_insert x _ (search_ofList xs)
 
@@ -78,7 +78,7 @@ theorem search_ofList : ∀ l, Search (ofList l)
 theorem tsort_eq_isort : ∀ l, tsort l = isort l
   | [] => rfl
   | x :: xs => by
-    show inorder (Tree.insert x (ofList xs)) = ins x (isort xs)
+    show Tree.inorder (Tree.insert x (Tree.ofList xs)) = ins x (isort xs)
     rw [inorder_insert x _ (search_ofList xs)]
     exact congrArg (ins x) (tsort_eq_isort xs)
 

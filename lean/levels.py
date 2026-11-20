@@ -26,7 +26,7 @@ def d(n):
     return depth[n]
 
 area_of = {}
-for f, area in [('A', 'A'), ('B', 'B'), ('C', 'C'), ('Cross', 'cross')] + ([('BigA', 'A'), ('BigAC', 'cross'), ('BigDE', 'D/E')] if big else []):
+for f, area in [('A', 'A'), ('B', 'B'), ('C', 'C'), ('Cross', 'cross')] + ([('BigA', 'A'), ('BigAC', 'cross'), ('BigDE', 'D')] if big else []):
     for m in re.finditer(r'^theorem (\S+)', (here / 'Reference' / f'{f}.lean').read_text(), re.M):
         name = m.group(1)
         area_of['M2.' + name if f == 'C' else name] = area
