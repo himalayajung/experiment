@@ -1,10 +1,10 @@
 # AI agents on the Lean problems: results so far
 
-Last updated: 2026-11-17. Every result here has its own page under `results/` (the links), with its design, caveats and logs. This page only gathers them. Setup names are short labels for their [OSO parameters](lean-experiment.md#the-setups): when results go public, α, the flat mint m, the knowledge reward m_bit, and f.
+Last updated: 2026-11-20. Every result here has its own page under `results/` (the links), with its design, caveats and logs. This page only gathers them. Setup names are short labels for their [OSO parameters](lean-experiment.md#the-setups): when results go public, α, the flat mint m, the knowledge reward m_bit, and f.
 
 ## TL;DR
 
-Checked after every run; last checked 2026-11-17, after the price correction below.
+Checked after every run; last checked 2026-11-20, after the bigger-set model check.
 
 - **Lemmas help weak models.** DeepSeek proves 4 of 16 targets alone, 12 of 16 with the lemmas they need.
 - **Sharing lets labs build on each other** (Spend all: 2.2 results a run in the shared library, 0.4 under traditional), but it has not raised targets proved. A plain shared library gets this too, so it is not unique to OSO. **Repeated work is not a general result:** traditional labs proved the same lemma about 20 times a run in the small cheap race (5 runs), but only 0.4 times in Spend all (20 runs per setup; shared library 0.2).
@@ -22,6 +22,7 @@ Checked after every run; last checked 2026-11-17, after the price correction bel
 - **Why the tests may be blind:** five of the 8 targets are nearly always proved, so "targets proved" barely moves. Flow-back should matter most on deep problems, not tested yet.
 - **Money is now counted at one fixed price per token** (from 2026-11-17; correction below). The model's price doubled between Nov 8 and Nov 9; dollar figures below are repriced.
 - **The setup checks out** (proof checker, fault tests, public benchmark). Flow-back was split by money spent instead of lines saved until 2026-11-08; the counts stand (correction below).
+- **Bigger problem set (27 targets), model check:** 4 cheap models, each target alone and with its lemmas, 2 attempts each ($3.34). Targets that needed their lemmas (0 of 2 alone, at least 1 of 2 with them): DeepSeek V4.1 Flash 10, GLM-5.3 Flash 8, Qwen 3.7 Flash 16 (but it proved only 27 of 54 even with lemmas), Claude Haiku 5.5 1 (it proved 50 of 54 alone: too strong for this set). Results: `results/pilot/big-panel-*`.
 
 ## Correction: the model's price changed between runs (found 2026-11-13)
 
