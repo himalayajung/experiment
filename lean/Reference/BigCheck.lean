@@ -8,6 +8,8 @@ import Problems.BigTargets
 namespace OSO
 open M2
 
+-- B3 is checked on one theorem here (main set: the pair isort_sorted, cnt_isort).
+theorem check_B3_full : target_B3 := isort_correct
 theorem check_A6 : target_A6 := L_dvd_mul
 theorem check_A7 : target_A7 := fun p q m n h => L_gcd p q h m n
 theorem check_F2 : target_F2 := v_dvd_mul

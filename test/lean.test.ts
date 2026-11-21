@@ -336,3 +336,28 @@ test('labs choose with the knowledge reward off: the setups set it, whatever the
   const e = (name: string, signature: string) => ({ name, signature, ns: 'OSO', author: 0, public: true, round: 1, uses: [] });
   assert.deepEqual(firstProofs([e('a', 'x :  1'), e('b', 'x : 1'), e('c', 'y')]).map((x) => x.name), ['a', 'c'], 'a repeat proof of a statement is left out');
 });
+
+test('a target pays its bounty once, even if a duplicate proof is published later', async () => {
+  const { Community } = await import('../src/lean/community.ts');
+  const com = new Community({ rules: 'shared', agents: ['a', 'b'], budget: 1, rounds: 1, repairs: 0, alpha: 1, mint: 0, effort: 'low', knowledge: 'off' });
+  const t = com.targets[0];
+  const entry = (author: number) => ({ name: com.uniqueName(`target_${t.publicId}`), ns: t.ns, signature: t.signature, author, target: t.publicId, public: false, round: 1, uses: [] });
+  const first = entry(0); com.library.push(first); com.publish(first, 1);
+  const dup = entry(1); com.library.push(dup); com.publish(dup, 2);
+  assert.ok(com.earnings[0] > 0);
+  assert.equal(com.earnings[1], 0);
+});
+
+test('lemma names never take a name the definitions use, and old runs read as the main set', async () => {
+  const { Community } = await import('../src/lean/community.ts');
+  const opts = { rules: 'shared' as const, agents: ['a'], budget: 1, rounds: 1, repairs: 0, alpha: 1, mint: 0, effort: 'low' as const, knowledge: 'off' as const };
+  const big = new Community({ ...opts, problems: 'big' });
+  assert.equal(big.uniqueName('tsort'), 'tsort_2');
+  assert.equal(big.uniqueName('firstN'), 'firstN_2');
+  assert.equal(big.targets.length, 27);
+  assert.match(big.systemPrompt(1), /def tsort/);
+  const old = new Community(opts);
+  assert.equal(old.problems, 'main');
+  assert.equal(old.targets.length, 8);
+  assert.doesNotMatch(old.systemPrompt(1), /def tsort/);
+});

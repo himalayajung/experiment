@@ -19,7 +19,7 @@
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { check, type CheckOptions } from './checker.ts';
-import { definitions, FREE, LEAN_DIR, loadTasks, parseReference, type Problems, type Task } from './tasks.ts';
+import { definedNames, definitions, FREE, LEAN_DIR, loadTasks, parseReference, type Problems, type Task } from './tasks.ts';
 import { OPENROUTER_API, type Chat, type Usage } from './agent.ts';
 import { referenceCost } from './prices.ts';
 import { referenceProof } from './selftest.ts';
@@ -233,6 +233,9 @@ export class Community {
   spent: number[];
   actions: Action[] = [];
   free: Pick<Task, 'name' | 'ns' | 'short' | 'signature'>[];
+  problems: Problems;
+  /** Names the definitions take: a lemma named like one would clash in every later check. */
+  reserved: Set<string>;
   /** Money follows earnings: money released to each lab so far, and its smoothed recent earnings. */
   released: number[] = [];
   recent: number[] = [];
@@ -243,7 +246,9 @@ export class Community {
 
   constructor(opts: CommunityOptions) {
     this.opts = opts;
-    const tasks = loadTasks(opts.problems);
+    // A run without a problem set is a main-set run (runs from before the option existed).
+    this.problems = opts.problems ?? 'main';
+    const tasks = loadTasks(this.problems);
     this.targets = tasks.filter((t) => t.posted);
     this.conjectures = (opts.conjectures ?? []).map((id, k) => {
       const t = tasks.find((x) => x.publicId === id);
@@ -254,7 +259,8 @@ export class Community {
     this.spent = opts.agents.map(() => 0);
     this.released = opts.agents.map(() => 0);
     this.recent = opts.agents.map(() => 0);
-    const ref = parseReference(opts.problems);
+    const ref = parseReference(this.problems);
+    this.reserved = new Set(definedNames(this.problems));
     this.free = FREE.filter((name) => ref.has(name)).map((name) => ({ name, ...ref.get(name)! }));
   }
 
@@ -270,7 +276,7 @@ export class Community {
     return [...this.free, ...this.visible(i).map((e) => ({ name: `${e.ns}.${e.name}`, ns: e.ns, short: e.name, signature: e.signature }))];
   }
   uniqueName(base: string) {
-    const taken = new Set([...this.library.map((e) => e.name), ...this.targets.map((t) => t.short), 'attempt', ...FREE.map((f) => f.split('.').pop()!)]);
+    const taken = new Set([...this.library.map((e) => e.name), ...this.targets.map((t) => t.short), 'attempt', ...FREE.map((f) => f.split('.').pop()!), ...this.reserved]);
     if (!taken.has(base)) return base;
     for (let k = 2; ; k++) if (!taken.has(`${base}_${k}`)) return `${base}_${k}`;
   }
@@ -307,7 +313,8 @@ export class Community {
     // The knowledge reward by proof size: only for what is new, so nothing if a lab published the same statement first.
     const first = !this.library.some((x) => x !== e && x.public && norm(x.signature) === norm(e.signature));
     if (this.opts.knowledge === 'proof-size' && !e.trivial && !e.known && first && e.size) this.pay(e, sizeReward(e.size));
-    if (e.target) this.pay(e, this.bounty(this.targets.find((t) => t.publicId === e.target)!));
+    // A target pays once: a lab's private duplicate published later (inside a bundle) earns nothing for it.
+    if (e.target && !this.library.some((x) => x !== e && x.public && x.target === e.target)) this.pay(e, this.bounty(this.targets.find((t) => t.publicId === e.target)!));
     if (e.conjecture && !e.trivial) this.pay(e, this.opts.conjectureBounty ?? 1);
   }
   /** Publishing with the author's own private results it rests on (traditional rules, and a lab's PUBLISH: yes),
@@ -353,7 +360,7 @@ ${rules}
 The definitions:
 
 \`\`\`lean
-${definitions(this.opts.problems ?? 'main').trim()}
+${definitions(this.problems).trim()}
 \`\`\`
 
 Proof rules: core lemmas and tactics such as simp, omega, decide, induction, cases and rw may be used. Not allowed: sorry, admit, native_decide, grind, search tactics (exact?, apply?), commands and set_option. Cite library results by the names shown. A lemma that a single basic tactic proves (rfl, decide, simp, omega) counts as trivial: you may cite it${M ? ', but it earns no mint' : ''}.
@@ -403,7 +410,7 @@ Results are published at once and every lab can cite them.${o.plainPlanner ? '' 
 The definitions:
 
 \`\`\`lean
-${definitions(this.opts.problems ?? 'main').trim()}
+${definitions(this.problems).trim()}
 \`\`\`
 
 Reply with one line per lab, and nothing else:
@@ -479,7 +486,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
           const visibleDone = this.provedConjecture(k.cid);
           if (visibleDone && (visibleDone.public || visibleDone.author === i)) errors = [`${k.cid} is already proved: cite it as ${visibleDone.name}.`];
           else {
-            const r = await check(k, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
+            const r = await check(k, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.problems });
             errors = r.errors;
             if (r.ok) {
               ok = true;
@@ -496,7 +503,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
         const t = this.targets.find((x) => x.publicId === target);
         if (!t) errors = [`There is no target ${target}.`];
         else {
-          const r = await check(t, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
+          const r = await check(t, proofBody(code), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.problems });
           errors = r.errors;
           if (r.ok) {
             ok = true;
@@ -504,7 +511,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
             const already = this.solved(t.publicId);
             e.size = proofSize(proofBody(code).replace(/^\s*:=/, ''));
             this.library.push(e);
-            if (already) reason = 'already solved by another lab: duplicate';
+            if (already) { e.known = true; reason = 'already solved by another lab: duplicate'; }
             else if (this.opts.rules === 'traditional' || this.opts.publishing === 'choose') this.publishBundle(e, round);
             else this.publish(e, round);
           }
@@ -515,18 +522,18 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
         if (!lemma) errors = [/^\s*(?:theorem|lemma)\s+[\w']+\./.test(code) ? 'Lemma names cannot contain a dot: use a plain name such as pow_add.' : 'Give the whole declaration: theorem <name> <statement> := <proof>.'];
         else if (this.targets.some((t) => norm(t.signature) === norm(lemma!.signature))) errors = ['That is a posted target: use ACTION: target <ID> instead.'];
         else {
-          const r = await check({ ns: 'OSO', signature: lemma.signature }, lemma.proof.replace(new RegExp(`(?<![\\w.])${lemma.name}(?![\\w'])`, 'g'), 'attempt'), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.opts.problems });
+          const r = await check({ ns: 'OSO', signature: lemma.signature }, lemma.proof.replace(new RegExp(`(?<![\\w.])${lemma.name}(?![\\w'])`, 'g'), 'attempt'), { library: this.checkLibrary(i), allowGrind: this.opts.allowGrind, problems: this.problems });
           errors = r.errors;
           if (r.ok) {
             // The trivial-result screen: a statement one basic tactic proves earns nothing.
             let trivial = false;
-            for (const tac of TRIVIAL) if ((await check({ ns: 'OSO', signature: lemma.signature }, tac, { library: [], problems: this.opts.problems })).ok) { trivial = true; break; }
+            for (const tac of TRIVIAL) if ((await check({ ns: 'OSO', signature: lemma.signature }, tac, { library: [], problems: this.problems })).ok) { trivial = true; break; }
             // A restatement of a published result (renamed variables, say) is not new: one step from it proves it.
             // Checked before the duplicate test and the name, so nothing waits between those and joining the library: two labs in one round must not take the same name.
             let known = false;
             if ((this.opts.knowledge === 'proof-size' || this.opts.knowledge === 'flat-mint') && !trivial) {
               const pub = this.library.filter((x) => x.public && !x.trivial).map((x) => `${x.ns}.${x.name}`);
-              if (pub.length) known = (await check({ ns: 'OSO', signature: lemma.signature }, `:= by first ${pub.map((n) => `| (apply ${n} <;> assumption) | (apply ${n}; done)`).join(' ')}`, { library: this.checkLibrary(i) })).ok;
+              if (pub.length) known = (await check({ ns: 'OSO', signature: lemma.signature }, `:= by first ${pub.map((n) => `| (apply ${n} <;> assumption) | (apply ${n}; done)`).join(' ')}`, { library: this.checkLibrary(i), problems: this.problems })).ok;
             }
             const dup = this.visible(i).find((e) => norm(e.signature) === norm(lemma!.signature));
             if (dup) { reason = `duplicate of ${dup.name}, which you can already cite`; }
@@ -599,7 +606,7 @@ ${last.length && !this.opts.plainPlanner ? `Last round:\n${last.join('\n')}\n\n`
 
 /** A stand-in agent that plays from the reference proofs: tests the mechanics without a model. */
 export function referenceAgent(com: Community, i: number): Chat {
-  const tasks = loadTasks(com.opts.problems);
+  const tasks = loadTasks(com.problems);
   const failed = new Set<string>();
   let last: Task | undefined;
   return async () => {
@@ -701,8 +708,8 @@ export function readCommunity(runId: string): CommunityResult {
 
 /** Targets solved by community spend, in the order actions finished. */
 /** The targets a result is judged on. */
-const postedCount = (r: CommunityResult) => loadTasks(r.opts.problems).filter((t) => t.posted).length;
-export const countedOf = (r: CommunityResult) => (r.opts.counted?.length ? r.opts.counted : loadTasks(r.opts.problems).filter((t) => t.posted).map((t) => t.publicId));
+const postedCount = (r: CommunityResult) => loadTasks(r.opts.problems ?? 'main').filter((t) => t.posted).length;
+export const countedOf = (r: CommunityResult) => (r.opts.counted?.length ? r.opts.counted : loadTasks(r.opts.problems ?? 'main').filter((t) => t.posted).map((t) => t.publicId));
 
 /** Money all labs together had spent by the end of each round. Labs work at the same time, so a proof is counted with its whole round: otherwise the calls still running when it came in would be left out. */
 export function moneyByRound(actions: Action[]): Map<number, number> {
@@ -727,7 +734,7 @@ export function progress(r: CommunityResult): [number, number][] {
 export function stats(r: CommunityResult) {
   const lemmas = r.actions.filter((a) => a.kind === 'lemma');
   const solved = new Set(r.actions.filter((a) => a.kind === 'target' && a.ok).map((a) => a.target));
-  const deepest = Math.max(0, ...[...solved].map((id) => loadTasks(r.opts.problems).find((t) => t.publicId === id)?.depth ?? 0));
+  const deepest = Math.max(0, ...[...solved].map((id) => loadTasks(r.opts.problems ?? 'main').find((t) => t.publicId === id)?.depth ?? 0));
   return {
     rules: r.opts.rules,
     targetsSolved: solved.size,
@@ -749,7 +756,7 @@ export function stats(r: CommunityResult) {
     builtOnOthers: firstProofs(r.library).filter((e) => e.uses.some((u) => { const x = r.library.find((y) => `${y.ns}.${y.name}` === u); return x && x.author !== e.author; })).length,
     deepestTarget: deepest,
     /** Value gained: the prizes of the targets solved (4 at depth 1, doubling with each level). */
-    value: [...solved].reduce((a, id) => a + 4 * 2 ** ((loadTasks(r.opts.problems).find((t) => t.publicId === id)?.depth ?? 1) - 1), 0),
+    value: [...solved].reduce((a, id) => a + 4 * 2 ** ((loadTasks(r.opts.problems ?? 'main').find((t) => t.publicId === id)?.depth ?? 1) - 1), 0),
     spent: r.actions.reduce((a, x) => a + costOf(x), 0),
     budget: r.opts.budget * r.opts.agents.length,
     actions: r.actions.length,

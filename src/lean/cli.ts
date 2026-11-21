@@ -40,6 +40,8 @@ if (!cmd || args.includes('--help') || args.includes('-h')) {
 }
 const flag = (name: string) => args.includes(`--${name}`);
 const value = (name: string, fallback: string) => { const i = args.indexOf(`--${name}`); return i >= 0 ? args[i + 1] : fallback; };
+// --problems wins over OSO_PROBLEMS, for every command (selftest, calibrate and runs alike).
+if (flag('problems')) process.env.OSO_PROBLEMS = value('problems', 'main');
 
 if (!leanAvailable()) {
   console.error('The Lean problem set is not here: lean/Reference/ and lean/reference-dag.md are missing.');
@@ -110,7 +112,7 @@ if (cmd === 'community') {
     conjectureBounty: Number(pick('conjectureBounty', '1')),
     mayStop: pick('may-stop', 'yes') !== 'no',
     counted: (cfg.counted as string[] | undefined) ?? (value('counted', '') ? value('counted', '').split(',') : []),
-    ...(['hard', 'big'].includes(pick('problems', process.env.OSO_PROBLEMS ?? '')) ? { problems: pick('problems', process.env.OSO_PROBLEMS ?? '') as 'hard' | 'big' } : {}),
+    ...(['hard', 'big'].includes(pick('problems', process.env.OSO_PROBLEMS ?? 'main')) ? { problems: pick('problems', process.env.OSO_PROBLEMS ?? 'main') as 'hard' | 'big' } : {}),
   };
   const rules = pick('rules', 'traditional,oso').split(',') as ('traditional' | 'oso')[];
   // The next experiment: several societies with the same agents and total money (src/lean/societies.ts).

@@ -30,12 +30,17 @@ for f, area in [('A', 'A'), ('B', 'B'), ('C', 'C'), ('Cross', 'cross')] + ([('Bi
     for m in re.finditer(r'^theorem (\S+)', (here / 'Reference' / f'{f}.lean').read_text(), re.M):
         name = m.group(1)
         area_of['M2.' + name if f == 'C' else name] = area
+area_of['isort_correct'] = 'B'
 
 checks = dict(re.findall(r'theorem check_(\w+) : target_\w+ := (?:fun [^⟩]*⟨)?(\w+)', (here / 'Reference' / 'Check.lean').read_text()))
 if big:
     checks.update(re.findall(r'theorem check_(\w+) : target_\w+ := (?:fun [^=]*=> )?(\w+)', (here / 'Reference' / 'BigCheck.lean').read_text()))
 posted = {v: k for k, v in checks.items()}
-posted.update({'cnt_isort': 'B3'})  # B3 is the pair isort_sorted + cnt_isort
+if big:  # the bigger set posts B3 on one theorem, the whole statement
+    posted = {v: k for v, k in posted.items() if k != 'B3'}
+    posted['isort_correct'] = posted.pop('isort_correct').removesuffix('_full')
+else:
+    posted.update({'cnt_isort': 'B3'})  # B3 is the pair isort_sorted + cnt_isort
 posted = {('M2.' + k if k in ('det_mul', 'pow_mul', 'det_pow') else k): v for k, v in posted.items()}
 
 rows = sorted((n for n in deps if n not in trivial), key=lambda n: (d(n), area_of.get(n, ''), n))
@@ -60,7 +65,7 @@ if big:
             if x not in seen and x not in trivial:
                 seen.add(x); below(x, seen)
         return seen
-    serves = {n: sorted(posted[t] for t in posted if n in below(t)) for n in rows if n not in posted}
+    serves = {n: sorted({posted[t] for t in posted if n in below(t)}) for n in rows if n not in posted}
     hubs = sorted(((len(v), n, v) for n, v in serves.items() if len(v) >= 3), reverse=True)
     lines += ['## Hubs', '', 'Hidden lemmas that at least 3 posted targets rest on.', '', '| Lemma | Targets | Which |', '| --- | --- | --- |']
     lines += [f'| `{n}` | {k} | {", ".join(v)} |' for k, n, v in hubs] + ['']

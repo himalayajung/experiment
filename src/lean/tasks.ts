@@ -36,7 +36,8 @@ export const FREE = ['OSO.u_succ_succ', 'OSO.L_succ_succ']; // L_succ_succ: bigg
 // The harder targets are a separate set, so that the runs made on the main set keep their meaning.
 // The bigger set (2026-11-20) keeps the main set's 8 targets and adds areas D (search trees) and E (counting).
 export type Problems = 'main' | 'hard' | 'big';
-export const DEFAULT_PROBLEMS: Problems = process.env.OSO_PROBLEMS === 'hard' ? 'hard' : process.env.OSO_PROBLEMS === 'big' ? 'big' : 'main';
+/** The problem set when none is given: OSO_PROBLEMS (the CLI sets it from --problems), else main. */
+export const defaultProblems = (): Problems => (process.env.OSO_PROBLEMS === 'hard' ? 'hard' : process.env.OSO_PROBLEMS === 'big' ? 'big' : 'main');
 const filesOf = (problems: Problems): [string, Task['area']][] => [['A', 'A'], ['B', 'B'], ['C', 'C'], ['Cross', 'cross'],
   ...(problems === 'hard' ? [['Hard', 'cross'] as [string, Task['area']]] : []),
   ...(problems === 'big' ? [['BigA', 'A'], ['BigAC', 'cross'], ['BigDE', 'D']] as [string, Task['area']][] : [])];
@@ -51,7 +52,7 @@ export function leanAvailable(): boolean {
 }
 
 /** Theorem statements and proofs from the reference sources. */
-export function parseReference(problems: Problems = DEFAULT_PROBLEMS): Map<string, { ns: string; short: string; signature: string; reference: string }> {
+export function parseReference(problems: Problems = defaultProblems()): Map<string, { ns: string; short: string; signature: string; reference: string }> {
   const out = new Map<string, { ns: string; short: string; signature: string; reference: string }>();
   for (const [file] of filesOf(problems)) {
     const lines = readFileSync(join(LEAN_DIR, 'Reference', `${file}.lean`), 'utf8').split('\n');
@@ -77,7 +78,7 @@ export function parseReference(problems: Problems = DEFAULT_PROBLEMS): Map<strin
 }
 
 /** All tasks, in depth order, with dependencies from reference-dag.md. */
-export function loadTasks(problems: Problems = DEFAULT_PROBLEMS): Task[] {
+export function loadTasks(problems: Problems = defaultProblems()): Task[] {
   const src = parseReference(problems);
   const rows: { depth: number; name: string; area: Task['area']; posted: string; uses: string[] }[] = [];
   for (const line of (problems === 'big' ? ['reference-dag-big.md'] : ['reference-dag.md', ...(problems === 'hard' ? ['reference-dag-hard.md'] : [])]).flatMap((f) => readFileSync(join(LEAN_DIR, f), 'utf8').split('\n'))) {
@@ -144,8 +145,15 @@ export const AREAS: Record<string, string> = {
 };
 
 /** The definitions agents see: the main set's, and for the bigger set its additions too. */
-export function definitions(problems: Problems = DEFAULT_PROBLEMS): string {
+export function definitions(problems: Problems = defaultProblems()): string {
   const main = readFileSync(join(LEAN_DIR, 'Problems', 'Defs.lean'), 'utf8');
-  if (problems !== 'big') return main;
-  return main.trimEnd() + '\n\n' + readFileSync(join(LEAN_DIR, 'Problems', 'BigDefs.lean'), 'utf8').replace(/^import .*\n/m, '');
+  const free = (names: string) => `\n-- Free to cite (true by \`rfl\`): ${names}.\n`;
+  if (problems !== 'big') return main.trimEnd() + free('OSO.u_succ_succ (n : Nat) : u (n + 2) = 5 * u (n + 1) + 3 * u n');
+  return main.trimEnd() + '\n\n' + readFileSync(join(LEAN_DIR, 'Problems', 'BigDefs.lean'), 'utf8').replace(/^import .*\n/m, '').trimEnd()
+    + free('OSO.u_succ_succ (n : Nat) : u (n + 2) = 5 * u (n + 1) + 3 * u n; OSO.L_succ_succ (p q n : Nat) : L p q (n + 2) = p * L p q (n + 1) + q * L p q n');
+}
+
+/** Names the definitions declare (last part, e.g. `insert` for `Tree.insert`): a lemma may not take one. */
+export function definedNames(problems: Problems = defaultProblems()): string[] {
+  return [...definitions(problems).matchAll(/^\s*(?:def|abbrev|inductive|structure|instance)\s+([\w.]+)/gm)].map((m) => m[1].split('.').pop()!);
 }

@@ -88,6 +88,11 @@ theorem cnt_reverse (a : Nat) : ∀ l, cnt a l.reverse = cnt a l
   | [] => rfl
   | x :: xs => by rw [List.reverse_cons, cnt_append, cnt_reverse a xs]; simp [cnt]; omega
 
+/-- Posted B3 in the bigger set: the whole statement (sorted and same counts), so a proof of half
+does not earn it. -/
+theorem isort_correct (l : List Nat) : Sorted (isort l) ∧ ∀ a, cnt a (isort l) = cnt a l :=
+  ⟨isort_sorted l, fun a => cnt_isort a l⟩
+
 /-- Posted E1: reversing keeps the counts. -/
 theorem same_reverse (l : List Nat) : SameCounts l.reverse l := fun a => cnt_reverse a l
 

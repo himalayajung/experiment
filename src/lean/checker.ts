@@ -7,7 +7,7 @@ import { execFile, execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
-import { asAxiom, DEFAULT_PROBLEMS, LEAN_DIR, type Problems, type Task } from './tasks.ts';
+import { asAxiom, defaultProblems, LEAN_DIR, type Problems, type Task } from './tasks.ts';
 
 /** Lean's own axioms, which any proof may use. */
 export const STANDARD_AXIOMS = ['propext', 'Classical.choice', 'Quot.sound'];
@@ -18,7 +18,7 @@ export interface CheckOptions {
   /** Allow `grind` (a decision of the experiment; banned by default). */
   allowGrind?: boolean;
   timeoutMs?: number;
-  /** Which problem set's definitions the attempt is checked against (default: OSO_PROBLEMS, else main). */
+  /** Which problem set's definitions the attempt is checked against (default: --problems / OSO_PROBLEMS, else main). */
   problems?: Problems;
 }
 
@@ -55,7 +55,7 @@ export function banned(proof: string, allowGrind = false): string[] {
 }
 
 /** The checked file: definitions, the library as axioms, the attempt, and the axioms it uses. */
-export function checkFile(task: Pick<Task, 'ns' | 'signature'>, proof: string, library: CheckOptions['library'], problems: Problems = DEFAULT_PROBLEMS): { text: string; firstProofLine: number } {
+export function checkFile(task: Pick<Task, 'ns' | 'signature'>, proof: string, library: CheckOptions['library'], problems: Problems = defaultProblems()): { text: string; firstProofLine: number } {
   const head = [
     problems === 'big' ? 'import Problems.BigDefs' : 'import Problems.Defs',
     'set_option autoImplicit false',
