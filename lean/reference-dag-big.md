@@ -37,7 +37,7 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 2 | `L_dvd_mul` | A | A6 | `L_add` |
 | 2 | `u_dvd_mul` | A | A3 | `u_add` |
 | 2 | `u_not_three_dvd` | A |  | `u_mod_three` |
-| 2 | `cnt_isort` | B | B3 | `cnt_ins` |
+| 2 | `cnt_isort` | B |  | `cnt_ins` |
 | 2 | `ins_pairwise` | B |  | `mem_ins` |
 | 2 | `merge_pairwise` | B |  | `mem_merge` |
 | 2 | `pairwise_unique` | B |  | `cnt_pos_iff_mem` |
@@ -65,12 +65,13 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 3 | `det_comp_pow` | cross | X3 | `M2.det_pow` |
 | 4 | `L_gcd_add_mul` | A |  | `L_gcd_add` |
 | 4 | `u_coprime_succ` | A |  | `coprime_three_u` |
-| 4 | `isort_sorted` | B | B3 | `ins_sorted` |
+| 4 | `isort_sorted` | B |  | `ins_sorted` |
 | 4 | `inorder_insert` | D |  | `cnt_inorder_insert`, `cnt_ins`, `inorder_sorted`, `ins_sorted`, `search_insert`, `sorted_unique` |
 | 4 | `same_msort` | D | E2 | `msort_pairwise` |
 | 4 | `cassini_L` | cross | X6 | `comp_pow`, `det_comp_pow` |
 | 5 | `L_gcd` | A | A7 | `L_gcd_add_mul` |
 | 5 | `u_gcd_add` | A |  | `coprime_three_u`, `u_add`, `u_coprime_succ` |
+| 5 | `isort_correct` | B | B3 | `cnt_isort`, `isort_sorted` |
 | 5 | `msort_eq_isort` | B | B5 | `cnt_isort`, `isort_sorted`, `msort_pairwise`, `pairwise_unique`, `sorted_iff_pairwise` |
 | 5 | `isort_eq_iff` | D | E4 | `cnt_isort`, `isort_sorted`, `sorted_unique` |
 | 5 | `isort_firstN` | D | X7 | `cnt_isort`, `firstN_pairwise`, `isort_sorted`, `pairwise_unique`, `sorted_iff_pairwise` |
@@ -84,7 +85,7 @@ Posted targets are marked with their id; every other theorem is a hidden referen
 | 7 | `u_gcd` | A | A5 | `u_gcd_add_mul` |
 | 7 | `lsum_msort` | D | E5 | `lsum_same`, `same_msort` |
 
-78 theorems; maximum depth 7.
+79 theorems; maximum depth 7.
 
 ## Hubs
 
@@ -98,7 +99,9 @@ Hidden lemmas that at least 3 posted targets rest on.
 | `ins_pairwise` | 9 | B3, B5, D3, E4, E5, X2, X4, X5, X7 |
 | `cnt_ins` | 9 | B3, B5, D3, E4, E5, X2, X4, X5, X7 |
 | `pairwise_unique` | 8 | B5, D3, E4, E5, X2, X4, X5, X7 |
+| `isort_sorted` | 8 | B3, B5, E4, E5, X2, X4, X5, X7 |
 | `cnt_pos_iff_mem` | 8 | B5, D3, E4, E5, X2, X4, X5, X7 |
+| `cnt_isort` | 8 | B3, B5, E4, E5, X2, X4, X5, X7 |
 | `cnt_append` | 6 | B5, D3, E1, E2, E5, X4 |
 | `sorted_unique` | 5 | D3, E4, E5, X4, X5 |
 | `M2.det_one` | 4 | C5, X1, X3, X6 |
