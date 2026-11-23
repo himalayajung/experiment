@@ -237,6 +237,50 @@
   .res .q { color: var(--ink-2); font-size: 13px; margin: 0 0 6px; }
   .res .a { font-size: 14px; margin: 0; }
   .res .meta { color: var(--ink-3); font-size: 12px; margin-top: 8px; }
+
+  /* The public copy wears the oso.network look: the same colours, type and top bar as the other pages. */
+  body.static { --bg: #f8f6f1; --surface: #fffefb; --ink: #1d1c19; --ink-2: #625f58; --ink-3: #8f8b82; --line: #e3dfd6; --focus: #e8792f; --accent: #e8792f; --accent-ink: #b45514;
+    --serif: "Newsreader", Georgia, serif; --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-family: var(--sans); color: var(--ink); }
+  @media (prefers-color-scheme: dark) {
+    body.static { --bg: #151412; --surface: #1d1c19; --ink: #edebe5; --ink-2: #a7a399; --ink-3: #7d7a72; --line: #302e29; --accent: #f0914f; --accent-ink: #f5a874; }
+  }
+  body.static header.mast { display: flex; align-items: center; gap: 24px; padding: 14px 24px; background: var(--bg); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  body.static .mast .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); margin-right: auto; }
+  body.static .mast .brand img { width: 30px; height: auto; }
+  body.static .mast .brand b { font: 500 1.35rem var(--serif); }
+  body.static .mast .brand span { font-size: 0.8rem; color: var(--ink-2); }
+  body.static .mast nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 0.9rem; }
+  body.static .mast nav a { color: var(--ink-2); text-decoration: none; }
+  body.static .mast nav a:hover, body.static .mast nav a[aria-current] { color: var(--ink); }
+  body.static .mast .cta { background: var(--ink); color: var(--bg); text-decoration: none; font-size: 0.85rem; font-weight: 600; padding: 9px 16px; border-radius: 7px; white-space: nowrap; }
+  @media (max-width: 760px) { body.static header.mast { gap: 10px 18px; padding: 12px 16px; } body.static .mast .brand span { display: none; } body.static .mast nav { order: 3; width: 100%; } }
+  body.static nav.side { background: var(--bg); padding: 20px 14px; height: calc(100vh - 61px); }
+  body.static nav.side a { font-size: 0.92rem; border-radius: 7px; }
+  body.static nav.side a[aria-current="page"] { background: var(--surface); box-shadow: inset 3px 0 0 var(--accent); color: var(--ink); font-weight: 600; }
+  body.static nav.side .navhead { font: 500 0.7rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-ink); }
+  body.static main { padding: 28px 32px 56px; }
+  body.static main a { color: var(--accent-ink); text-underline-offset: 3px; }
+  body.static .pane, body.static .doc, body.static .res, body.static .field, body.static .card, body.static .bar, body.static .grid { border-radius: 12px; border-color: var(--line); }
+  body.static .pane h2, body.static h2.section, body.static #view-overview h2, body.static .step h2 { font: 400 1.6rem/1.2 var(--serif); }
+  body.static .pane h2 { font-size: 1.35rem; }
+  body.static .res h3, body.static .field h3, body.static .explainer h3 { font: 500 1.15rem/1.3 var(--serif); }
+  body.static .res, body.static .field { padding: 18px 20px; }
+  body.static .res:hover, body.static .field:hover { border-color: var(--accent); }
+  body.static .res .meta, body.static .muted { font-family: var(--sans); }
+  body.static .doc { max-width: 900px; padding: 36px 44px; font-size: 16.5px; line-height: 1.7; }
+  body.static .doc h1 { font: 400 2.4rem/1.1 var(--serif); letter-spacing: -0.01em; margin-bottom: 18px; }
+  body.static .doc h2 { font: 400 1.6rem/1.25 var(--serif); margin-top: 40px; }
+  body.static .doc h3 { font: 500 1.2rem/1.3 var(--serif); margin-top: 28px; }
+  body.static .doc table { font-size: 14px; }
+  body.static .doc code { font-family: var(--mono); font-size: 0.85em; }
+  body.static .doc blockquote { border-left-color: var(--accent); }
+  body.static button.btn.primary { background: var(--accent); border-color: var(--accent); }
+  body.static .tabs .btn[aria-selected="true"], body.static .tabs .btn[aria-current="page"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  body.static .tabs .btn { border-radius: 999px; padding: 6px 14px; }
+  body.static main .tabs a.btn:not([aria-selected="true"]):not([aria-current="page"]) { color: var(--ink-2); text-decoration: none; }
+  body.static select, body.static input, body.static button.btn, body.static a.btn { border-radius: 7px; }
+  @media (max-width: 800px) { body.static nav.side { height: auto; padding: 10px; } body.static main { padding: 20px 16px 40px; } body.static .doc { padding: 22px 18px; font-size: 16px; } body.static .doc h1 { font-size: 1.9rem; } }
 </style>
 <link rel="stylesheet" href="/katex/katex.min.css">
 <style>.doc .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }</style>
@@ -296,7 +340,7 @@
   </section>
   <!-- Progress: the paid runs going now, with what is left of the money -->
   <section id="view-home" class="hidden">
-    <div class="pane" style="margin-bottom:12px"><h2 style="margin:0 0 6px;font-size:20px">Share work early, and credit what others build on: does research get further for the same money?</h2>
+    <div class="pane" style="margin-bottom:12px"><h2 style="margin:0 0 6px;font-size:20px">How should people and agents share work and credit to get the most for the money? Every result so far.</h2>
       <p class="muted" id="h-aim" style="margin:0"></p></div>
     <div class="home-grid">
       <div class="pane static-only"><h3 style="margin:0 0 8px;font-size:15px">Running now</h3><p>Runs in progress stream on <a href="https://www.oso.network/live.html">the live page</a>, where you can also propose an experiment or pledge to fund one.</p></div>
@@ -589,9 +633,12 @@ async function route() {
 // The public copy shows every document itself, and links to the repository for code, proofs and data.
 if (STATIC) {
   // The same menu as oso.network's other pages: this copy lives at oso.network/experiment/.
-  document.querySelector('header').insertAdjacentHTML('beforeend', '<nav class="site" aria-label="Site" style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px">'
-    + [['../', 'OSO home'], ['../live.html', 'Live'], ['../results.html', 'Results'], ['https://github.com/open-science-org/experiment/issues/new?template=propose-experiment.yml', 'Propose'], ['../live.html#fund', 'Pledge'], ['https://github.com/open-science-org/experiment', 'Code and data']]
-      .map(([h, t]) => `<a href="${h}">${t}</a>`).join('') + '</nav>');
+  document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">');
+  const head = document.querySelector('header');
+  head.className = 'mast';
+  head.innerHTML = '<a class="brand" href="../"><img src="../images/logo.png" alt=""><b>OSO</b><span>Open Science Organization</span></a><nav aria-label="Site">'
+    + [['../live.html', 'Live'], ['../results.html', 'Results', true], ['https://github.com/open-science-org/experiment/issues/new?template=propose-experiment.yml', 'Propose'], ['../about.html', 'About'], ['https://github.com/open-science-org/experiment', 'Code and data']]
+      .map(([h, t, cur]) => `<a href="${h}"${cur ? ' aria-current="page"' : ''}>${t}</a>`).join('') + '</nav><a class="cta" href="../live.html#fund">Fund a run</a>';
 }
 window.addEventListener('hashchange', route);
 
