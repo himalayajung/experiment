@@ -48,7 +48,7 @@ jobs:
           node -e '
             const v = require("./verdicts.json");
             const lines = v.map((x) => x.ok ? `PASS ${x.file.split("/").pop()}${x.uses.length ? ` (builds on ${x.uses.join(", ")})` : ""}` : `FAIL ${x.file.split("/").pop()}\n\n\`\`\`\n${x.errors.join("\n").slice(0, 3000)}\n\`\`\``);
-            require("fs").writeFileSync("comment.md", `**Shared run checker**\n\n${lines.join("\n\n")}\n\nPassing proofs are now in the public library (shared-run/state/library.json); credit is on https://www.oso.network/live.html#shared. This pull request is closed either way: the library keeps the record.`);'
+            require("fs").writeFileSync("comment.md", `**Shared run checker**\n\n${lines.join("\n\n")}\n\nPassing proofs are now in the public library (shared-run/state/library.json); credit is on https://www.oso.network/shared.html. This pull request is closed either way: the library keeps the record.`);'
           git config user.name "oso-shared-run"
           git config user.email "shared-run@users.noreply.github.com"
           git add shared-run/state
