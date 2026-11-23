@@ -1,0 +1,32 @@
+{
+ "id": "planner-trial-2",
+ "kind": "race",
+ "date": "2026-11-07",
+ "title": "Societies compared: verified targets for the money (planner-trial-2)",
+ "ranAt": "2026-11-06T23:43:15.773Z",
+ "design": {
+  "question": "For the same agents, checker and money, does OSO reach the same verified targets for less than other ways of organizing the agents?",
+  "compare": "Planner",
+  "fixed": "the same 4 agents (the single agent: the first, with all the money), $0.40 in all, Lean checks every proof",
+  "measure": "money spent to verify 2 of the counted targets (C3, A3, C4, X1, B3, B5, X2, A5); a run that never does counts as its whole budget",
+  "better": "lower",
+  "runs": "1 run per society, paired"
+ },
+ "answer": "Cheapest to 2 targets: Planner, $0.00.",
+ "table": [
+  {
+   "society": "Planner",
+   "money to 2 targets": "$0.00 ± 0.00",
+   "got there": "1 of 1",
+   "targets at full budget": "4.00 of 8",
+   "spent": "$0.14",
+   "work done twice": "0.00"
+  }
+ ],
+ "caveats": [
+  "Values are mean ± standard deviation over runs; the verdict compares runs in pairs (run k of each society), with ± two standard errors of the difference."
+ ],
+ "cost": "$0.14 as charged",
+ "page": "results/community/planner-trial-2/summary.md",
+ "chart": "results/community/planner-trial-2/figures/progress.svg"
+}

@@ -83,8 +83,9 @@
   pre.err { border-color: var(--bad); }
   .hidden { display: none !important; }
   .app { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: calc(100vh - 53px); }
-  body.static .app { grid-template-columns: minmax(0, 1fr); }
-  body.static nav.side, body.static a[data-tab="runs"] { display: none; }
+  /* The public copy only reads results: no new runs, no running-now or money pages, no run transcripts. */
+  body.static a[href="#/new"], body.static a[href="#/progress"], body.static a[href="#/money"], body.static a[href="#/roadmap"], body.static a[data-tab="runs"], body.static .app-only { display: none; }
+  body:not(.static) .static-only { display: none; }
   @media (max-width: 800px) { .app { grid-template-columns: minmax(0, 1fr); } }
   nav.side { background: var(--surface); border-right: 1px solid var(--line); padding: 14px 10px; position: sticky; top: 0; align-self: start; height: calc(100vh - 53px); overflow: auto; }
   nav.side a { display: block; padding: 7px 10px; border-radius: 6px; color: var(--ink-2); text-decoration: none; font-size: 14px; }
@@ -298,9 +299,10 @@
     <div class="pane" style="margin-bottom:12px"><h2 style="margin:0 0 6px;font-size:20px">Share work early, and credit what others build on: does research get further for the same money?</h2>
       <p class="muted" id="h-aim" style="margin:0"></p></div>
     <div class="home-grid">
-      <div class="pane"><h3 style="margin:0 0 8px;font-size:15px">Running now</h3><div id="h-running"><p class="muted">Loading…</p></div><div id="h-pilot"></div>
+      <div class="pane static-only"><h3 style="margin:0 0 8px;font-size:15px">Running now</h3><p>Runs in progress stream on <a href="https://www.oso.network/live.html">the live page</a>, where you can also propose an experiment or pledge to fund one.</p></div>
+      <div class="pane app-only"><h3 style="margin:0 0 8px;font-size:15px">Running now</h3><div id="h-running"><p class="muted">Loading…</p></div><div id="h-pilot"></div>
         <h3 style="margin:16px 0 8px;font-size:15px">Money</h3><div id="h-money"><p class="muted">Loading…</p></div></div>
-      <div class="pane"><h3 style="margin:0 0 8px;font-size:15px">Milestones <a href="#/roadmap" style="font-size:13px;font-weight:400">roadmap →</a></h3><div id="h-ms"><p class="muted">Loading…</p></div></div>
+      <div class="pane app-only"><h3 style="margin:0 0 8px;font-size:15px">Milestones <a href="#/roadmap" style="font-size:13px;font-weight:400">roadmap →</a></h3><div id="h-ms"><p class="muted">Loading…</p></div></div>
     </div>
     <div class="pane" style="margin-top:12px"><h3 style="margin:0 0 4px;font-size:15px">Findings so far</h3><div class="doc home-doc" id="h-findings"><p class="muted">Loading…</p></div></div>
   </section>
@@ -508,8 +510,15 @@ function shortLabel(s, max) {
 }
 // The public copy has no server: each call reads a saved file (scripts/export-site.ts).
 const STATIC = document.body.classList.contains('static');
-const staticPath = (path) => { const [p, q] = path.split('?'), u = new URLSearchParams(q ?? ''); return p === '/api/lean' ? `data/lean/${u.get('exp') || 'default'}.json` : p === '/api/problems' ? `data/problems-${u.get('set')}.json` : `data/doc/${(u.get('path') ?? '').replace(/\W/g, '_')}.json`; };
-const api = (path) => fetch(STATIC ? staticPath(path) : path).then(async (r) => {
+// The same key as staticKey in scripts/export-site.ts.
+const staticPath = (path) => `data/api/${decodeURIComponent(path).replace(/^\/api\//, '').replace(/[^A-Za-z0-9.-]+/g, '_')}.json`;
+// A replay in the public copy: the setup's saved scenario, run here with the same simulation (site/sim.js).
+const staticSim = async (path) => {
+  const u = new URLSearchParams(path.split('?')[1]), exp = u.get('experiment');
+  const saved = await api(exp ? `/api/sim/scenario?experiment=${encodeURIComponent(exp)}&row=${u.get('row')}` : `/api/sim/scenario?space=${encodeURIComponent(u.get('space'))}&setting=${encodeURIComponent(u.get('setting'))}`);
+  return (await import('./sim.js')).run(saved, Number(u.get('seed')) || 1);
+};
+const api = (path) => STATIC && path.startsWith('/api/sim?') ? staticSim(path) : fetch(STATIC ? staticPath(path) : path).then(async (r) => {
   // A missing saved file comes back as an HTML page, not JSON.
   const j = await r.json().catch(() => ({ error: r.ok ? 'Not readable' : `Not found (${r.status})` }));
   if (!r.ok || j?.error) throw new Error(j.error || r.statusText);
@@ -542,7 +551,8 @@ async function route() {
   // Leaving a page stops its replays and polling.
   if (path !== route.last) { route.last = path; stopC(); stopSim(); stopPilot(); clearInterval(liveTimer); for (const t of [C.poll, pilot.poll, LN.poll, PG.home]) clearTimeout(t); }
   const top = '/' + (path.split('/')[1] ?? '');
-  if (STATIC && top !== '/lean') { location.hash = '#/lean'; return; }
+  // The public copy only reads results: pages that start runs, show runs going or show the account's money go home.
+  if (STATIC && ['/new', '/progress', '/money', '/roadmap'].includes(top)) { location.hash = '#/home'; return; }
   // Which menu item this page belongs to.
   const navOf = () => {
     if (path === '/' || top === '/home') return '#/home';
@@ -576,10 +586,9 @@ async function route() {
   if (path === '/equations') { show('view-doc'); return openDoc(params().get('m') === 'full' ? 'docs/equations.md' : params().get('m') === 'steps' ? 'docs/equations-steps.md' : 'docs/equations-simple.md'); }
   show('view-overview'); drawResults();
 }
-// The public copy links its documents to the repository, where everything is.
+// The public copy shows every document itself, and links to the repository for code, proofs and data.
 if (STATIC) {
   document.querySelector('header').insertAdjacentHTML('beforeend', '<a href="https://github.com/open-science-org/experiment" style="margin-left:auto;font-size:13px">Code, proofs and data on GitHub</a>');
-  document.addEventListener('click', (e) => { const a = e.target.closest?.('a[href^="#/doc/"]'); if (!a) return; e.preventDefault(); window.open('https://github.com/open-science-org/experiment/blob/master/' + a.getAttribute('href').slice(6).split('?')[0], '_blank'); });
 }
 window.addEventListener('hashchange', route);
 

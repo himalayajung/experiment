@@ -1,0 +1,1 @@
+{"id":"simple-ideas-6x32-p2-len3g0-comp0-7-lab-size-96-agents-20261028","title":"Lab size with 96 agents, every level equally hard","seeds":60,"firstSeed":1,"rows":["Traditional (α = 1, β = 0), alone","Labs of 2","Labs of 4","Labs of 8","Labs of 16","Labs of 32","Labs of 48","Labs of 96 (one lab of everyone)","OSO (α = 0.8, β = 1)","OSO (α = 0.2, β = 1)"]}

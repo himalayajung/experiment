@@ -1,0 +1,444 @@
+{
+ "id": "pilot-societies-1",
+ "k": 2,
+ "counted": [
+  "C3",
+  "A3",
+  "C4",
+  "X1",
+  "B3",
+  "B5",
+  "X2",
+  "A5"
+ ],
+ "runs": [
+  {
+   "society": "single",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-single",
+   "stats": {
+    "rules": "independent",
+    "targetsSolved": 2,
+    "countedSolved": 2,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 4,
+    "value": 48,
+    "spent": 0.052925030340000005,
+    "budget": 0.6,
+    "actions": 7,
+    "lemmasAccepted": 0,
+    "lemmasDuplicate": 0,
+    "trivial": 0,
+    "failed": 5,
+    "plansUnusable": 0,
+    "published": 2,
+    "neverPublished": 0,
+    "earnings": [
+     50
+    ]
+   }
+  },
+  {
+   "society": "independent",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-independent",
+   "stats": {
+    "rules": "independent",
+    "targetsSolved": 3,
+    "countedSolved": 3,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 4,
+    "value": 52,
+    "spent": 0.11899223684400001,
+    "budget": 0.6,
+    "actions": 105,
+    "lemmasAccepted": 1,
+    "lemmasDuplicate": 84,
+    "trivial": 0,
+    "failed": 17,
+    "plansUnusable": 0,
+    "published": 3,
+    "neverPublished": 85,
+    "earnings": [
+     0,
+     0,
+     22,
+     33
+    ]
+   }
+  },
+  {
+   "society": "shared",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-shared",
+   "stats": {
+    "rules": "shared",
+    "targetsSolved": 5,
+    "countedSolved": 5,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 3,
+    "deepestTarget": 5,
+    "value": 124,
+    "spent": 0.36549798294400004,
+    "budget": 0.6,
+    "actions": 31,
+    "lemmasAccepted": 3,
+    "lemmasDuplicate": 4,
+    "trivial": 0,
+    "failed": 19,
+    "plansUnusable": 0,
+    "published": 8,
+    "neverPublished": 4,
+    "earnings": [
+     67,
+     18,
+     42,
+     5
+    ]
+   }
+  },
+  {
+   "society": "planner",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-planner",
+   "stats": {
+    "rules": "planner",
+    "targetsSolved": 2,
+    "countedSolved": 2,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 1,
+    "deepestTarget": 3,
+    "value": 20,
+    "spent": 0.529355826,
+    "budget": 0.6,
+    "actions": 20,
+    "lemmasAccepted": 1,
+    "lemmasDuplicate": 1,
+    "trivial": 0,
+    "failed": 11,
+    "plansUnusable": 0,
+    "published": 3,
+    "neverPublished": 1,
+    "earnings": [
+     0,
+     6,
+     17,
+     0
+    ]
+   }
+  },
+  {
+   "society": "traditional",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-traditional",
+   "stats": {
+    "rules": "traditional",
+    "targetsSolved": 3,
+    "countedSolved": 3,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 4,
+    "value": 52,
+    "spent": 0.5293715219999999,
+    "budget": 0.6,
+    "actions": 17,
+    "lemmasAccepted": 1,
+    "lemmasDuplicate": 0,
+    "trivial": 0,
+    "failed": 13,
+    "plansUnusable": 0,
+    "published": 3,
+    "neverPublished": 1,
+    "earnings": [
+     17,
+     0,
+     33,
+     5
+    ]
+   }
+  },
+  {
+   "society": "oso",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-oso",
+   "stats": {
+    "rules": "oso",
+    "targetsSolved": 4,
+    "countedSolved": 4,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 4,
+    "deepestTarget": 5,
+    "value": 116,
+    "spent": 0.6581639244599999,
+    "budget": 0.6,
+    "actions": 15,
+    "lemmasAccepted": 5,
+    "lemmasDuplicate": 1,
+    "trivial": 0,
+    "failed": 5,
+    "plansUnusable": 0,
+    "published": 9,
+    "neverPublished": 1,
+    "earnings": [
+     31.099999999999994,
+     6.15,
+     86.75,
+     1
+    ]
+   }
+  },
+  {
+   "society": "oso-0.2",
+   "rep": 1,
+   "runId": "pilot-societies-1-r1-oso-0.2",
+   "stats": {
+    "rules": "oso",
+    "targetsSolved": 6,
+    "countedSolved": 6,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 3,
+    "deepestTarget": 5,
+    "value": 140,
+    "spent": 0.34897022128800004,
+    "budget": 0.6,
+    "actions": 41,
+    "lemmasAccepted": 9,
+    "lemmasDuplicate": 1,
+    "trivial": 0,
+    "failed": 25,
+    "plansUnusable": 0,
+    "published": 15,
+    "neverPublished": 1,
+    "earnings": [
+     26.097429295655726,
+     58.702570704344275,
+     37.2,
+     33
+    ]
+   }
+  },
+  {
+   "society": "single",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-single",
+   "stats": {
+    "rules": "independent",
+    "targetsSolved": 6,
+    "countedSolved": 6,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 5,
+    "value": 140,
+    "spent": 0.20794973284799995,
+    "budget": 0.6,
+    "actions": 19,
+    "lemmasAccepted": 2,
+    "lemmasDuplicate": 0,
+    "trivial": 0,
+    "failed": 11,
+    "plansUnusable": 0,
+    "published": 6,
+    "neverPublished": 2,
+    "earnings": [
+     146
+    ]
+   }
+  },
+  {
+   "society": "independent",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-independent",
+   "stats": {
+    "rules": "independent",
+    "targetsSolved": 3,
+    "countedSolved": 3,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 4,
+    "value": 52,
+    "spent": 0.18738204076799997,
+    "budget": 0.6,
+    "actions": 101,
+    "lemmasAccepted": 3,
+    "lemmasDuplicate": 73,
+    "trivial": 0,
+    "failed": 23,
+    "plansUnusable": 0,
+    "published": 3,
+    "neverPublished": 75,
+    "earnings": [
+     0,
+     55,
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "society": "shared",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-shared",
+   "stats": {
+    "rules": "shared",
+    "targetsSolved": 5,
+    "countedSolved": 5,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 1,
+    "deepestTarget": 5,
+    "value": 124,
+    "spent": 0.3120470073239999,
+    "budget": 0.6,
+    "actions": 31,
+    "lemmasAccepted": 6,
+    "lemmasDuplicate": 2,
+    "trivial": 0,
+    "failed": 18,
+    "plansUnusable": 0,
+    "published": 11,
+    "neverPublished": 2,
+    "earnings": [
+     67,
+     26,
+     7,
+     35
+    ]
+   }
+  },
+  {
+   "society": "planner",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-planner",
+   "stats": {
+    "rules": "planner",
+    "targetsSolved": 5,
+    "countedSolved": 5,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 1,
+    "deepestTarget": 5,
+    "value": 124,
+    "spent": 0.28172788004399996,
+    "budget": 0.6,
+    "actions": 41,
+    "lemmasAccepted": 6,
+    "lemmasDuplicate": 0,
+    "trivial": 0,
+    "failed": 17,
+    "plansUnusable": 0,
+    "published": 11,
+    "neverPublished": 0,
+    "earnings": [
+     0,
+     24,
+     12,
+     99
+    ]
+   }
+  },
+  {
+   "society": "traditional",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-traditional",
+   "stats": {
+    "rules": "traditional",
+    "targetsSolved": 4,
+    "countedSolved": 4,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 4,
+    "value": 60,
+    "spent": 0.25452394328399996,
+    "budget": 0.6,
+    "actions": 26,
+    "lemmasAccepted": 0,
+    "lemmasDuplicate": 2,
+    "trivial": 0,
+    "failed": 20,
+    "plansUnusable": 0,
+    "published": 4,
+    "neverPublished": 2,
+    "earnings": [
+     9,
+     5,
+     17,
+     33
+    ]
+   }
+  },
+  {
+   "society": "oso",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-oso",
+   "stats": {
+    "rules": "oso",
+    "targetsSolved": 5,
+    "countedSolved": 5,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 2,
+    "deepestTarget": 5,
+    "value": 124,
+    "spent": 0.27041357070000005,
+    "budget": 0.6,
+    "actions": 28,
+    "lemmasAccepted": 3,
+    "lemmasDuplicate": 1,
+    "trivial": 0,
+    "failed": 19,
+    "plansUnusable": 0,
+    "published": 8,
+    "neverPublished": 1,
+    "earnings": [
+     9.612178364020568,
+     5,
+     14.949999999999998,
+     102.43782163597945
+    ]
+   }
+  },
+  {
+   "society": "oso-0.2",
+   "rep": 2,
+   "runId": "pilot-societies-1-r2-oso-0.2",
+   "stats": {
+    "rules": "oso",
+    "targetsSolved": 6,
+    "countedSolved": 6,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 7,
+    "deepestTarget": 5,
+    "value": 140,
+    "spent": 0.46697893288799996,
+    "budget": 0.6,
+    "actions": 61,
+    "lemmasAccepted": 18,
+    "lemmasDuplicate": 4,
+    "trivial": 0,
+    "failed": 33,
+    "plansUnusable": 0,
+    "published": 24,
+    "neverPublished": 4,
+    "earnings": [
+     89.38840318535729,
+     9.80717102136292,
+     59.954425793279796,
+     4.85
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+# The default scenario: every setting of the simulator, with its default value.
+# A scenario or experiment file overrides only what it changes; unknown keys are rejected.
+# Components chosen by `kind` (world, visibility, allocation, policy) are plugins; list them with
+# `npm run sim -- plugins`. The model is described in docs/simulator.md.
+
+world:
+  kind: ideas            # the idea graph generator (docs/equations.md, section 3.1; also: file, chain)
+  levels: 6              # structure: levels, ideas per level, parents per idea, chance a parent skips a level
+  width: 8
+  parents: 2
+  skip: 0.2
+  length: 3              # difficulty: new bits at level 1, and added per level
+  lengthGrowth: 2
+  levelTie: 1            # how strictly difficulty follows level: 1 strictly, 0.8 mostly (1 idea in 5 not), 0 not at all
+  composition: 0.7       # attribution: share of an idea's bits taken from its parents
+  newBits: 0             # optional: new bits per idea; it inherits the rest (0 = off, composition decides)
+  targets: 2             # bounties per level, on levels targetsFrom to the top (0: the top only)
+  targetsFrom: 0
+  bountyBase: 4          # bounty = bountyBase · bountyGrowth^(level − 1)
+  bountyGrowth: 2
+  attemptLimit: 24       # ideas with more unresolved bits than this cannot be attempted
+
+success:                 # only for graphs without bits (the Lean problem set): p = p0 · eta^(level − 1)
+  p0: 0.5
+  eta: 0.6
+  oracle:
+    kind: chance         # what decides an attempt: succeeds with chance p (also: learning)
+
+attribution:
+  noise: 0               # noise in the ledger's link weights (0 = exact, as in Lean)
+
+agents:
+  archetypes:            # traits of each archetype (see docs/simulator.md, section 2.2)
+    plain:      { skill: 1.0, conjecture: 1.0, cost: 1.0, horizon: 1.0,  risk: 0,    reuse: 1.0, sharing: 0,   gaming: 0,   specialist: false }
+    foundation: { skill: 1.0, conjecture: 0.7, cost: 1.0, horizon: 0.98, risk: 0.2,  reuse: 0.9, sharing: 0.5, gaming: 0,   specialist: false }
+    racer:      { skill: 1.0, conjecture: 0.5, cost: 1.0, horizon: 0.85, risk: -0.2, reuse: 0.6, sharing: 0,   gaming: 0,   specialist: false }
+    explorer:   { skill: 0.5, conjecture: 0.3, cost: 0.3, horizon: 0.95, risk: 0,    reuse: 0.8, sharing: 0.2, gaming: 0,   specialist: false }
+    specialist: { skill: 1.0, conjecture: 0.6, cost: 1.0, horizon: 0.95, risk: 0,    reuse: 0.8, sharing: 0.2, gaming: 0,   specialist: true }
+    freeRider:  { skill: 0.8, conjecture: 0.5, cost: 1.0, horizon: 0.9,  risk: 0,    reuse: 1.0, sharing: -1,  gaming: 0,   specialist: false }
+    gamer:      { skill: 0.8, conjecture: 0.3, cost: 0.5, horizon: 0.9,  risk: 0,    reuse: 0.8, sharing: 0,   gaming: 0.6, specialist: false }
+  mix:                   # how many agents of each archetype (order matters for reproducibility)
+    foundation: 3
+    racer: 3
+    explorer: 2
+    specialist: 2
+    freeRider: 1
+    gamer: 1
+  specialist:
+    boost: 1.6           # skill multiplier in the specialist's area
+    penalty: 0.4         # and elsewhere
+  deciders: {}           # per-archetype deciders, e.g. { gamer: { kind: random } }; default behaviour.decider
+  groups: []             # labs: sizes of groups (in agent order) who share every proof privately, e.g. [4, 4, 4]; others alone
+
+rules:                   # the only thing that differs between traditional research and OSO
+  alpha: 1               # absorption rate: how much of incoming value an idea absorbs (traditional: 1)
+  mint: 0                # flat mint per published idea (off since model v5; the knowledge reward replaces it)
+  mintPerBit: 1          # knowledge reward: paid per new bit (bits in no published idea yet) on publication
+  alpha0: null           # absorption rate of the knowledge reward (null: the same as alpha)
+  screen: 0.5            # chance the validation screen rejects a trivial idea (θ)
+  publishFailures: false # make failed attempts public, so others learn from them (with oracle: learning)
+  visibility:
+    kind: finished-only  # also: immediate, delayed (d), choice
+
+knowledge:                # properties of shared ideas (specification, section 2.3)
+  absorbCost: 0          # money an agent spends to take up each published idea
+  errorRate: 0           # chance a proof is wrong; wrong ideas spread to what builds on them;
+                         # a target check rejects them and retracts the wrong ideas it rested on
+
+budget:
+  X: 1200                # total money
+  rounds: 120
+  perAgentPerRound: null # if set, rounds = X / (number of agents × perAgentPerRound)
+  stopWhenSolved: true   # a funder stops paying once every target is solved
+  stopAtShare: 1         # ... or once this share of the targets is solved (0.5: half)
+  allocation:
+    kind: earnings-share # half equal, half by recent earnings when rho = 0.5
+    rho: 0.5
+    smoothing: 0.7
+    epochs: null         # turns of the loop: shares reset at the start of each of E equal blocks of rounds,
+                         # from the earnings of the block before (1: never; null: every round)
+
+behaviour:
+  decider:
+    kind: formula        # how agents decide (also: random); formula uses the settings below
+  policy:
+    kind: softmax        # choose by expected value, with some randomness
+    tau: 0.3             # temperature, relative to the best score
+    epsilon: 0.05        # chance of a uniformly random choice
+  perceptionNoise: 1     # σ0: scale of the noise in perceived values
+  kappa: 1               # publish rule: how much publishing raises a lemma's use
+  psi: 0.5               # publish rule: scoop risk
+  roundsPerLevel: 5      # expected rounds per level of level, for discounting
+  rivals: public         # rivals counted from published work only (all: private holders too, as before v6)
+
+measures:
+  targetLevel: 7         # level L* for the speed and cost measures

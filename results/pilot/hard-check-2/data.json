@@ -1,0 +1,206 @@
+{
+ "runId": "hard-check-2",
+ "options": {
+  "attempts": 3,
+  "repairs": 3,
+  "concurrency": 6,
+  "allowGrind": false,
+  "conditions": [
+   "library",
+   "alone"
+  ],
+  "only": [
+   "H1",
+   "H2",
+   "H3",
+   "H4",
+   "H5",
+   "H6"
+  ],
+  "model": {
+   "provider": "openrouter",
+   "model": "deepseek/deepseek-v4.1-flash",
+   "effort": "high",
+   "maxTokens": 32000
+  }
+ },
+ "totals": {
+  "input": 8468,
+  "output": 3682439,
+  "cacheRead": 168064,
+  "cacheWrite": 0,
+  "cost": 1.23881261504
+ },
+ "byDepth": [
+  {
+   "depth": 2,
+   "theorems": 1,
+   "attempts": 3,
+   "proved": 3,
+   "rate": 1,
+   "tokens": 76335.33333333333
+  },
+  {
+   "depth": 4,
+   "theorems": 4,
+   "attempts": 12,
+   "proved": 6,
+   "rate": 0.5,
+   "tokens": 68809.08333333333
+  },
+  {
+   "depth": 5,
+   "theorems": 1,
+   "attempts": 3,
+   "proved": 0,
+   "rate": 0,
+   "tokens": 134296
+  }
+ ],
+ "theorems": [
+  {
+   "id": "H6",
+   "depth": 2,
+   "area": "cross",
+   "posted": "H6",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133436,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H1",
+   "depth": 4,
+   "area": "A",
+   "posted": "H1",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133360,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H3",
+   "depth": 4,
+   "area": "cross",
+   "posted": "H3",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133480,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H4",
+   "depth": 4,
+   "area": "B",
+   "posted": "H4",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133388,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H5",
+   "depth": 4,
+   "area": "B",
+   "posted": "H5",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133348,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H2",
+   "depth": 5,
+   "area": "A",
+   "posted": "H2",
+   "condition": "alone",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133444,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H6",
+   "depth": 2,
+   "area": "cross",
+   "posted": "H6",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 3,
+   "meanTurns": 3,
+   "tokens": 76335.33333333333,
+   "outputTokens": 71765.33333333333
+  },
+  {
+   "id": "H1",
+   "depth": 4,
+   "area": "A",
+   "posted": "H1",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133908,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H3",
+   "depth": 4,
+   "area": "cross",
+   "posted": "H3",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 134416,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H4",
+   "depth": 4,
+   "area": "B",
+   "posted": "H4",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 3,
+   "meanTurns": 1,
+   "tokens": 3604.6666666666665,
+   "outputTokens": 2015.6666666666667
+  },
+  {
+   "id": "H5",
+   "depth": 4,
+   "area": "B",
+   "posted": "H5",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 3,
+   "meanTurns": 1,
+   "tokens": 3307.6666666666665,
+   "outputTokens": 1698.6666666666667
+  },
+  {
+   "id": "H2",
+   "depth": 5,
+   "area": "A",
+   "posted": "H2",
+   "condition": "library",
+   "attempts": 3,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 134296,
+   "outputTokens": 128000
+  }
+ ]
+}

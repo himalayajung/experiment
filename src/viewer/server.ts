@@ -9,7 +9,7 @@ import { marked } from 'marked';
 import katex from 'katex';
 import { ROOT, REPORTS_DIR, RESULTS_DIR } from '../paths.ts';
 import { loadScenario, expandPaths } from '../engine/config.ts';
-import { traceRun } from '../engine/model.ts';
+import { replay, type ReplaySpace } from './replay.ts';
 import { expand, loadExperiment, OUTCOMES, PROGRESS, PROGRESS_POINTS, preset } from '../experiments/experiment.ts';
 import { MEASURE_NAMES, VALUES } from '../engine/measures.ts';
 import { loadSpace, spaceIds, withCalibratedBudget, type Space } from '../spaces/spaces.ts';
@@ -25,7 +25,7 @@ const PORT = Number(process.env.PORT ?? 8791);
 /** Folders the viewer may serve files and documents from. Never lean/ (private) or .env. */
 const PUBLIC_DIRS = ['reports', 'results', 'docs', 'worlds', 'config', 'spaces'];
 /** Single public files outside those folders. Nothing else in lean/ is served: its private parts hold proofs. */
-const PUBLIC_FILES = ['README.md', 'lean/README.md', 'lean/Problems/Defs.lean', 'lean/Problems/Targets.lean'];
+const PUBLIC_FILES = ['README.md', 'lean/README.md', 'lean/Problems/Defs.lean', 'lean/Problems/Targets.lean', 'lean/Problems/BigDefs.lean', 'lean/Problems/BigTargets.lean'];
 const TYPES: Record<string, string> = { '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.md': 'text/plain; charset=utf-8', '.yaml': 'text/plain; charset=utf-8', '.jsonl': 'text/plain; charset=utf-8', '.py': 'text/plain; charset=utf-8', '.lean': 'text/plain; charset=utf-8' };
 
 /** A repository path, if it is inside a public folder. */
@@ -101,19 +101,9 @@ function space(id: string): Space {
   return spaces.get(id)!;
 }
 
-/** What the page needs to replay one traced run. */
+/** What the page needs to replay one traced run of a saved experiment's row. */
 function replayOf(sc: ReturnType<typeof loadScenario>, seed: number, label: string, title: string) {
-  const t = traceRun(sc, seed);
-  const w = t.world;
-  return {
-    space: { id: '', title, glossary: null, areas: [] },
-    setting: { id: label, label }, seed,
-    budget: { X: sc.budget.X, rounds: sc.budget.rounds },
-    world: { n: w.n, levels: w.levels, level: w.level, area: w.area, prereqs: w.prereqs, isTarget: w.isTarget, bounty: w.bounty, deadEnd: w.deadEnd, names: w.names ?? null, p: w.p, bits: w.bits ?? null, tosses: w.tosses ?? null },
-    agents: t.agents.map((a) => ({ id: a.id, archetype: a.archetype })),
-    events: t.events,
-    result: { frontier: t.result.frontier, targetsSolved: t.result.targetsSolved, spend: t.result.spend, sharing: t.result.sharingRate },
-  };
+  return replay(sc, seed, { id: '', title, glossary: null, areas: [] }, { id: label, label });
 }
 
 /**
@@ -168,22 +158,28 @@ function simExperiment(id: string, row: number, seed: number) {
   return replayOf(rows[row].scenario, seed, experimentRows(id).rows[row], spec.title);
 }
 
-function sim(id: string, setting: string, seed: number) {
+function spaceScenario(id: string, setting: string) {
   if (!SETTINGS[setting]) throw new Error(`unknown setting ${setting}`);
   const sp = space(id);
   // The space's settings (with its calibrated budget), then the rule setting.
   const sc = loadScenario(sp.spec.scenarioFile ?? null, expandPaths(sp.spec.scenario ?? {}), preset(setting));
-  const t = traceRun(sc, seed);
-  const w = t.world;
-  return {
-    space: { id, title: sp.spec.title, glossary: sp.spec.glossary, areas: sp.spec.areas ?? [] },
-    setting: { id: setting, label: SETTINGS[setting] }, seed,
-    budget: { X: sc.budget.X, rounds: sc.budget.rounds },
-    world: { n: w.n, levels: w.levels, level: w.level, area: w.area, prereqs: w.prereqs, isTarget: w.isTarget, bounty: w.bounty, deadEnd: w.deadEnd, names: w.names ?? null, p: w.p },
-    agents: t.agents.map((a) => ({ id: a.id, archetype: a.archetype })),
-    events: t.events,
-    result: { frontier: t.result.frontier, targetsSolved: t.result.targetsSolved, spend: t.result.spend, sharing: t.result.sharingRate },
-  };
+  return { scenario: sc, space: { id, title: sp.spec.title, glossary: sp.spec.glossary, areas: sp.spec.areas ?? [] }, setting: { id: setting, label: SETTINGS[setting] } };
+}
+
+function sim(id: string, setting: string, seed: number) {
+  const s = spaceScenario(id, setting);
+  return replay(s.scenario, seed, s.space, s.setting);
+}
+
+/** A setup's scenario, for the public copy to replay in the browser: a world read from a file is written in. */
+function savedScenario(s: { scenario: ReturnType<typeof loadScenario>; space: ReplaySpace; setting: { id: string; label: string } }) {
+  const w = s.scenario.world as { kind: string; path?: string; areas?: number };
+  if (w.kind !== 'file') return s;
+  const full = publicPath(w.path ?? '');
+  if (!full) throw new Error(`world file ${w.path} is not public`);
+  const { nodes } = JSON.parse(readFileSync(full, 'utf8'));
+  const { path: _, ...rest } = w;
+  return { ...s, scenario: { ...s.scenario, world: { ...rest, kind: 'graph', nodes } } };
 }
 
 /** A JSON-lines file; a running job may be part-way through writing the last line, so that one may be skipped. */
@@ -303,7 +299,8 @@ async function models() {
 /** A copy of the repository has no run files; the numbers behind the graphs are saved in site/data (npm run site). */
 const hasRuns = () => existsSync(join(LEAN_DIR, 'runs'));
 const savedFile = (...parts: string[]) => { const f = join(ROOT, 'site', 'data', ...parts); return existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : null; };
-const savedLean = (exp: string) => { const d = (/^[\w.-]+$/.test(exp) && savedFile('lean', `${exp}.json`)) || savedFile('lean', 'default.json'); return d && { ...d, saved: true }; };
+// Without the run folders (a fresh clone), the Lean pages read the public copy's saved data (scripts/export-site.ts).
+const savedLean = (exp: string) => { const d = (/^[\w.-]+$/.test(exp) && savedFile('api', `lean_exp_${exp}.json`)) || savedFile('api', 'lean.json'); return d && { ...d, saved: true }; };
 
 /** One problem set as a graph: only the theorems some target needs, with how hard each target has been so far. */
 /** problemSpace reads every run's result; kept for a minute, since runs can finish while the app is open. */
@@ -568,7 +565,7 @@ const server = createServer(async (req, res) => {
     if (url.pathname === '/api/progress') return send(200, await progressData());
     if (url.pathname === '/api/costs') return send(200, await costData());
     if (url.pathname === '/api/lean') return send(200, !hasRuns() ? savedLean(url.searchParams.get('exp') ?? '') : leanAvailable() ? leanData(url.searchParams.get('exp') ?? '') : null);
-    if (url.pathname === '/api/problems') { const set = url.searchParams.get('set') === 'hard' ? 'hard' : 'main'; return send(200, !hasRuns() ? savedFile(`problems-${set}.json`) : leanAvailable() ? problemSpace(set) : null); }
+    if (url.pathname === '/api/problems') { const set = url.searchParams.get('set') === 'hard' ? 'hard' : url.searchParams.get('set') === 'big' ? 'big' : 'main'; return send(200, !hasRuns() ? savedFile('api', `problems_set_${set}.json`) : leanAvailable() ? problemSpace(set) : null); }
     if (url.pathname === '/api/lean/run') return send(200, leanRun(url.searchParams.get('id') ?? ''));
     if (url.pathname === '/api/design/field') return send(200, design.fieldValues(url.searchParams.get('id') ?? ''));
     if (url.pathname === '/api/jobs') return send(200, design.listJobs());
@@ -605,6 +602,11 @@ const server = createServer(async (req, res) => {
     if (url.pathname === '/api/presets') return send(200, design.graphPresets());
     if (url.pathname === '/api/spaces') return send(200, spaceIds().map((id) => ({ id, title: loadSpace(id).spec.title })));
     if (url.pathname === '/api/settings') return send(200, SETTINGS);
+    if (url.pathname === '/api/sim/scenario') {
+      const exp = url.searchParams.get('experiment');
+      if (exp) { const spec = loadExperiment(exp), row = Number(url.searchParams.get('row')), r = expand(spec)[row]; if (!r) throw new Error(`no row ${row} in ${exp}`); return send(200, savedScenario({ scenario: r.scenario, space: { id: '', title: spec.title, glossary: null, areas: [] }, setting: { id: experimentRows(exp).rows[row], label: experimentRows(exp).rows[row] } })); }
+      return send(200, savedScenario(spaceScenario(url.searchParams.get('space') ?? '', url.searchParams.get('setting') ?? 'oso')));
+    }
     if (url.pathname === '/api/sim/rows') return send(200, experimentRows(url.searchParams.get('experiment') ?? ''));
     if (url.pathname === '/api/sim/experiments') return send(200, allCards().filter((c) => c.kind === 'simulation' && existsSync(join(ROOT, 'config', 'experiments', `${c.id}.yaml`))).map((c) => ({ id: c.id, title: c.title, date: c.date })));
     if (url.pathname === '/api/sim' && url.searchParams.get('experiment')) return send(200, simExperiment(url.searchParams.get('experiment')!, Number(url.searchParams.get('row') ?? 0), Number(url.searchParams.get('seed') ?? 1)));

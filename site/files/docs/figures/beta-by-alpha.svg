@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="viz" viewBox="0 0 760 420" width="760" height="420" role="img" aria-label="Share of ideas published at once (β), by α, when agents choose">
+<style>
+  .viz { --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --grid: #e6e5e1;
+         --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --dead: #c9c7c0; }
+  @media (prefers-color-scheme: dark) {
+    .viz { --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --grid: #34332f;
+           --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --dead: #4a4945; }
+  }
+  .bg { fill: var(--surface); }
+  text { fill: var(--ink); font-family: Helvetica, Arial, sans-serif; }
+  .title { font-size: 16px; font-weight: 700; }
+  .sub, .tick, .axis { fill: var(--ink-2); font-size: 12px; }
+  .grid { stroke: var(--grid); stroke-width: 1; }
+  .base { stroke: var(--ink-2); stroke-width: 1; }
+  .line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .c1 { stroke: var(--s1); } .f1 { fill: var(--s1); }
+  .c2 { stroke: var(--s2); } .f2 { fill: var(--s2); }
+  .c3 { stroke: var(--s3); } .f3 { fill: var(--s3); }
+  .dot { stroke: var(--surface); stroke-width: 2; }
+  .label { font-size: 12px; font-weight: 700; }
+  .t1 { fill: var(--s1); } .t2 { fill: var(--s2); } .t3 { fill: var(--s3); }
+</style><rect class="bg" width="760" height="420" rx="8"/>
+<text class="title" x="64" y="30">Share of ideas published at once (β), by α, when agents choose</text>
+<text class="sub" x="64" y="50">More flow-back to the right. Mean over runs; bars: 95% ranges. Run at α 1, 0.8, 0.2 (and 0).</text>
+<line class="line c2" x1="64" y1="70" x2="82" y2="70"/><text class="label t2" x="88" y="74">AI labs, paid to publish</text>
+<line class="line c1" style="stroke:var(--ink)" x1="256.4" y1="70" x2="274.4" y2="70"/><text class="label t1" style="fill:var(--ink)" x="280.4" y="74">AI labs, not paid</text>
+<line class="line c3" x1="402.59999999999997" y1="70" x2="420.59999999999997" y2="70"/><text class="label t3" x="426.59999999999997" y="74">Sim. matched, paid</text>
+<line class="line c3" style="stroke:var(--s4)" x1="555.4" y1="70" x2="573.4" y2="70"/><text class="label t3" style="fill:var(--s4)" x="579.4" y="74">Sim. matched, not paid</text>
+<line class="line c3" style="stroke:var(--s5)" x1="64" y1="88" x2="82" y2="88"/><text class="label t3" style="fill:var(--s5)" x="88" y="92">Sim. identical agents</text>
+<line class="grid" x1="64" x2="570" y1="364" y2="364"/>
+<text class="tick" x="56" y="368" text-anchor="end">0%</text>
+<line class="grid" x1="64" x2="570" y1="300.5" y2="300.5"/>
+<text class="tick" x="56" y="304.5" text-anchor="end">25%</text>
+<line class="grid" x1="64" x2="570" y1="237" y2="237"/>
+<text class="tick" x="56" y="241" text-anchor="end">50%</text>
+<line class="grid" x1="64" x2="570" y1="173.5" y2="173.5"/>
+<text class="tick" x="56" y="177.5" text-anchor="end">75%</text>
+<line class="grid" x1="64" x2="570" y1="110" y2="110"/>
+<text class="tick" x="56" y="114" text-anchor="end">100%</text>
+<line class="base" x1="64" x2="570" y1="364" y2="364"/>
+<text class="tick" x="64" y="382" text-anchor="middle">1</text>
+<text class="tick" x="165.2" y="382" text-anchor="middle">0.8</text>
+<text class="tick" x="266.4" y="382" text-anchor="middle">0.6</text>
+<text class="tick" x="367.59999999999997" y="382" text-anchor="middle">0.4</text>
+<text class="tick" x="468.8" y="382" text-anchor="middle">0.2</text>
+<text class="tick" x="570" y="382" text-anchor="middle">0</text>
+<text class="axis" x="317" y="408" text-anchor="middle">α, the share a result keeps</text>
+<text class="axis" transform="translate(16 237) rotate(-90)" text-anchor="middle">Published at once (β)</text>
+<path class="line c2" d="M64.0 112.6 L165.2 113.1 L468.8 110.9"/>
+<line class="line c2" style="stroke-width:1.5;opacity:.55" x1="64.0" x2="64.0" y1="115.7" y2="110.0"/>
+<line class="line c2" style="stroke-width:1.5;opacity:.55" x1="165.2" x2="165.2" y1="118.0" y2="110.0"/>
+<line class="line c2" style="stroke-width:1.5;opacity:.55" x1="468.8" x2="468.8" y1="113.0" y2="110.0"/>
+<circle class="dot f2" cx="64.0" cy="112.6" r="4.5"><title>AI labs, paid to publish: 99% at α, the share a result keeps 1</title></circle>
+<circle class="dot f2" cx="165.2" cy="113.1" r="4.5"><title>AI labs, paid to publish: 99% at α, the share a result keeps 0.8</title></circle>
+<circle class="dot f2" cx="468.8" cy="110.9" r="4.5"><title>AI labs, paid to publish: 100% at α, the share a result keeps 0.2</title></circle>
+<path class="line c1" style="stroke:var(--ink)" d="M64.0 215.8 L165.2 205.3 L468.8 127.8"/>
+<line class="line c1" style="stroke-width:1.5;opacity:.55;stroke:var(--ink)" x1="64.0" x2="64.0" y1="346.8" y2="110.0"/>
+<line class="line c1" style="stroke-width:1.5;opacity:.55;stroke:var(--ink)" x1="165.2" x2="165.2" y1="286.0" y2="124.5"/>
+<line class="line c1" style="stroke-width:1.5;opacity:.55;stroke:var(--ink)" x1="468.8" x2="468.8" y1="149.6" y2="110.0"/>
+<circle class="dot f1" style="fill:var(--ink)" cx="64.0" cy="215.8" r="4.5"><title>AI labs, not paid: 58% at α, the share a result keeps 1</title></circle>
+<circle class="dot f1" style="fill:var(--ink)" cx="165.2" cy="205.3" r="4.5"><title>AI labs, not paid: 63% at α, the share a result keeps 0.8</title></circle>
+<circle class="dot f1" style="fill:var(--ink)" cx="468.8" cy="127.8" r="4.5"><title>AI labs, not paid: 93% at α, the share a result keeps 0.2</title></circle>
+<path class="line c3" d="M64.0 321.9 L165.2 312.3 L468.8 127.1"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55" x1="64.0" x2="64.0" y1="324.4" y2="319.4"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55" x1="165.2" x2="165.2" y1="314.7" y2="309.8"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55" x1="468.8" x2="468.8" y1="128.4" y2="125.7"/>
+<circle class="dot f3" cx="64.0" cy="321.9" r="4.5"><title>Sim. matched, paid: 17% at α, the share a result keeps 1</title></circle>
+<circle class="dot f3" cx="165.2" cy="312.3" r="4.5"><title>Sim. matched, paid: 20% at α, the share a result keeps 0.8</title></circle>
+<circle class="dot f3" cx="468.8" cy="127.1" r="4.5"><title>Sim. matched, paid: 93% at α, the share a result keeps 0.2</title></circle>
+<path class="line c3" style="stroke:var(--s4)" d="M64.0 322.6 L165.2 322.3 L468.8 128.7"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s4)" x1="64.0" x2="64.0" y1="324.8" y2="320.4"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s4)" x1="165.2" x2="165.2" y1="324.7" y2="319.9"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s4)" x1="468.8" x2="468.8" y1="130.5" y2="126.9"/>
+<circle class="dot f3" style="fill:var(--s4)" cx="64.0" cy="322.6" r="4.5"><title>Sim. matched, not paid: 16% at α, the share a result keeps 1</title></circle>
+<circle class="dot f3" style="fill:var(--s4)" cx="165.2" cy="322.3" r="4.5"><title>Sim. matched, not paid: 16% at α, the share a result keeps 0.8</title></circle>
+<circle class="dot f3" style="fill:var(--s4)" cx="468.8" cy="128.7" r="4.5"><title>Sim. matched, not paid: 93% at α, the share a result keeps 0.2</title></circle>
+<path class="line c3" style="stroke:var(--s5)" d="M64.0 302.5 L165.2 289.2 L468.8 195.7 L570.0 110.0"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s5)" x1="64.0" x2="64.0" y1="307.8" y2="297.2"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s5)" x1="165.2" x2="165.2" y1="294.7" y2="283.8"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s5)" x1="468.8" x2="468.8" y1="200.6" y2="190.9"/>
+<line class="line c3" style="stroke-width:1.5;opacity:.55;stroke:var(--s5)" x1="570.0" x2="570.0" y1="110.0" y2="110.0"/>
+<circle class="dot f3" style="fill:var(--s5)" cx="64.0" cy="302.5" r="4.5"><title>Sim. identical agents: 24% at α, the share a result keeps 1</title></circle>
+<circle class="dot f3" style="fill:var(--s5)" cx="165.2" cy="289.2" r="4.5"><title>Sim. identical agents: 29% at α, the share a result keeps 0.8</title></circle>
+<circle class="dot f3" style="fill:var(--s5)" cx="468.8" cy="195.7" r="4.5"><title>Sim. identical agents: 66% at α, the share a result keeps 0.2</title></circle>
+<circle class="dot f3" style="fill:var(--s5)" cx="570.0" cy="110.0" r="4.5"><title>Sim. identical agents: 100% at α, the share a result keeps 0</title></circle>
+<text class="label t3" style="fill:var(--s5)" x="582" y="114">Sim. identical agents: 100%</text>
+<text class="label t2" x="582" y="130">AI labs, paid to publish: 100%</text>
+<text class="label t3" x="582" y="146">Sim. matched, paid: 93%</text>
+<text class="label t1" style="fill:var(--ink)" x="582" y="162">AI labs, not paid: 93%</text>
+<text class="label t3" style="fill:var(--s4)" x="582" y="178">Sim. matched, not paid: 93%</text>
+</svg>

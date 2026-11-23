@@ -1,0 +1,14 @@
+{
+ "model": {
+  "provider": "local",
+  "model": "hf.co/mradermacher/Goedel-Prover-V2-8B-GGUF:Q4_K_M",
+  "effort": "medium",
+  "maxTokens": 3000
+ },
+ "attempts": 1,
+ "repairs": 1,
+ "budget": null,
+ "problems": [
+  "omni_theorem_3054"
+ ]
+}

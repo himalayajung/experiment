@@ -1,0 +1,47 @@
+{
+ "id": "planner-trial-2",
+ "k": 2,
+ "counted": [
+  "C3",
+  "A3",
+  "C4",
+  "X1",
+  "B3",
+  "B5",
+  "X2",
+  "A5"
+ ],
+ "runs": [
+  {
+   "society": "planner",
+   "rep": 1,
+   "runId": "planner-trial-2-r1-planner",
+   "stats": {
+    "rules": "planner",
+    "targetsSolved": 4,
+    "countedSolved": 4,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "builtOnOthers": 0,
+    "deepestTarget": 5,
+    "value": 116,
+    "spent": 0.14170930269600002,
+    "budget": 0.4,
+    "actions": 20,
+    "lemmasAccepted": 2,
+    "lemmasDuplicate": 0,
+    "trivial": 0,
+    "failed": 8,
+    "plansUnusable": 0,
+    "published": 6,
+    "neverPublished": 0,
+    "earnings": [
+     0,
+     22,
+     67,
+     33
+    ]
+   }
+  }
+ ]
+}

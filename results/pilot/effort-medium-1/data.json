@@ -1,0 +1,123 @@
+{
+ "runId": "effort-medium-1",
+ "options": {
+  "attempts": 4,
+  "repairs": 3,
+  "concurrency": 24,
+  "allowGrind": false,
+  "conditions": [
+   "library",
+   "alone"
+  ],
+  "only": [
+   "H4",
+   "H5",
+   "H6"
+  ],
+  "model": {
+   "provider": "openrouter",
+   "model": "deepseek/deepseek-v4.1-flash",
+   "effort": "medium",
+   "maxTokens": 32000
+  }
+ },
+ "totals": {
+  "input": 16432,
+  "output": 1766965,
+  "cacheRead": 84224,
+  "cacheWrite": 0,
+  "cost": 0.59582361664
+ },
+ "byDepth": [
+  {
+   "depth": 2,
+   "theorems": 1,
+   "attempts": 4,
+   "proved": 4,
+   "rate": 1,
+   "tokens": 61516.75
+  },
+  {
+   "depth": 4,
+   "theorems": 2,
+   "attempts": 8,
+   "proved": 8,
+   "rate": 1,
+   "tokens": 2608.25
+  }
+ ],
+ "theorems": [
+  {
+   "id": "H6",
+   "depth": 2,
+   "area": "cross",
+   "posted": "H6",
+   "condition": "alone",
+   "attempts": 4,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133436,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H4",
+   "depth": 4,
+   "area": "B",
+   "posted": "H4",
+   "condition": "alone",
+   "attempts": 4,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133388,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H5",
+   "depth": 4,
+   "area": "B",
+   "posted": "H5",
+   "condition": "alone",
+   "attempts": 4,
+   "proved": 0,
+   "meanTurns": 4,
+   "tokens": 133348,
+   "outputTokens": 128000
+  },
+  {
+   "id": "H6",
+   "depth": 2,
+   "area": "cross",
+   "posted": "H6",
+   "condition": "library",
+   "attempts": 4,
+   "proved": 4,
+   "meanTurns": 3.25,
+   "tokens": 61516.75,
+   "outputTokens": 55722.75
+  },
+  {
+   "id": "H4",
+   "depth": 4,
+   "area": "B",
+   "posted": "H4",
+   "condition": "library",
+   "attempts": 4,
+   "proved": 4,
+   "meanTurns": 1,
+   "tokens": 2911.5,
+   "outputTokens": 1322.5
+  },
+  {
+   "id": "H5",
+   "depth": 4,
+   "area": "B",
+   "posted": "H5",
+   "condition": "library",
+   "attempts": 4,
+   "proved": 4,
+   "meanTurns": 1,
+   "tokens": 2305,
+   "outputTokens": 696
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{"id":"omni_theorem_3018","topic":"algebra","k":0,"ok":true,"turns":1,"input":266,"output":1155,"dollars":0.0002477202,"seconds":101.388,"t":1793997177564}
+{"id":"omni_theorem_3054","topic":"algebra","k":0,"ok":false,"turns":3,"input":1323,"output":5091,"dollars":0.0010995309000000001,"seconds":122.662,"failure":"Lean rejected the proof","t":1793997198839}
+{"id":"omni_theorem_2597","topic":"algebra","k":0,"ok":false,"turns":3,"input":1590,"output":20195,"dollars":0.004150719768,"seconds":106.274,"failure":"no proof in the reply","t":1793997283839}
+{"id":"omni_theorem_2816","topic":"algebra","k":0,"ok":false,"turns":1,"input":0,"output":0,"dollars":0,"seconds":0.172,"failure":"call failed","t":1793997284012}
+{"id":"theorem_proving_zh_blue_1080","topic":"algebra","k":0,"ok":false,"turns":3,"input":604,"output":64000,"dollars":0.012997103183999999,"seconds":333.727,"failure":"call failed","t":1793997409904}
+{"id":"theorem_proving_zh_blue_1247","topic":"algebra","k":0,"ok":false,"turns":3,"input":1952,"output":33590,"dollars":0.0069110184,"seconds":223.457,"failure":"call failed","t":1793997422297}

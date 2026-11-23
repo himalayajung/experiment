@@ -1,0 +1,87 @@
+{
+ "id": "pilot-societies-1",
+ "kind": "race",
+ "date": "2026-11-07",
+ "title": "Societies compared: verified targets for the money (pilot-societies-1)",
+ "ranAt": "2026-11-07T00:29:12.320Z",
+ "design": {
+  "question": "For the same agents, checker and money, does OSO reach the same verified targets for less than other ways of organizing the agents?",
+  "compare": "Single agent, Independent labs, Shared library, Planner, Traditional, OSO, α 0.8, OSO, α 0.2",
+  "fixed": "the same 4 agents (the single agent: the first, with all the money), $0.60 in all, Lean checks every proof",
+  "measure": "money spent to verify 2 of the counted targets (C3, A3, C4, X1, B3, B5, X2, A5); a run that never does counts as its whole budget",
+  "better": "lower",
+  "runs": "2 runs per society, paired"
+ },
+ "answer": "OSO, α 0.8 reached 2 verified targets for $0.03 on average, the same as Independent labs over 2 paired runs (no clear difference; ±$0.04). OSO, α 0.2 reached 2 verified targets for $0.02 on average, the same as Independent labs over 2 paired runs (OSO cheaper; ±$0.00).",
+ "table": [
+  {
+   "society": "Single agent",
+   "settings": "one lab, all the money · α 1, c 0",
+   "money to 2 targets": "$0.04 ± 0.01",
+   "got there": "2 of 2",
+   "targets at full budget": "4.00 of 8",
+   "spent": "$0.13",
+   "work done twice": "0.00"
+  },
+  {
+   "society": "Independent labs",
+   "settings": "results never shared · α 1, c 0",
+   "money to 2 targets": "$0.03 ± 0.01",
+   "got there": "2 of 2",
+   "targets at full budget": "3.00 of 8",
+   "spent": "$0.15",
+   "work done twice": "78.50"
+  },
+  {
+   "society": "Shared library",
+   "settings": "shared at once · α 1, c 0",
+   "money to 2 targets": "$0.05 ± 0.02",
+   "got there": "2 of 2",
+   "targets at full budget": "5.00 of 8",
+   "spent": "$0.34",
+   "work done twice": "3.00"
+  },
+  {
+   "society": "Planner",
+   "settings": "shared at once · α 1, c 0 · lab 1 assigns the work",
+   "money to 2 targets": "$0.12 ± 0.14",
+   "got there": "2 of 2",
+   "targets at full budget": "3.50 of 8",
+   "spent": "$0.41",
+   "work done twice": "0.50"
+  },
+  {
+   "society": "Traditional",
+   "settings": "shared when a target is proved · α 1, c 0",
+   "money to 2 targets": "$0.07 ± 0.04",
+   "got there": "2 of 2",
+   "targets at full budget": "3.50 of 8",
+   "spent": "$0.39",
+   "work done twice": "1.00"
+  },
+  {
+   "society": "OSO, α 0.8",
+   "settings": "shared at once · α 0.8, c 0.15",
+   "money to 2 targets": "$0.03 ± 0.02",
+   "got there": "2 of 2",
+   "targets at full budget": "4.50 of 8",
+   "spent": "$0.46",
+   "work done twice": "1.00"
+  },
+  {
+   "society": "OSO, α 0.2",
+   "settings": "shared at once · α 0.2, c 0.15",
+   "money to 2 targets": "$0.02 ± 0.01",
+   "got there": "2 of 2",
+   "targets at full budget": "6.00 of 8",
+   "spent": "$0.41",
+   "work done twice": "2.50"
+  }
+ ],
+ "caveats": [
+  "Values are mean ± standard deviation over runs; the verdict compares runs in pairs (run k of each society), with ± two standard errors of the difference."
+ ],
+ "cost": "$4.58 as charged",
+ "page": "results/community/pilot-societies-1/summary.md",
+ "chart": "results/community/pilot-societies-1/figures/progress.svg"
+}

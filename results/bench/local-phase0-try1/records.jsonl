@@ -1,0 +1,5 @@
+{"id":"omni_theorem_3018","topic":"algebra","k":0,"ok":true,"turns":2,"input":8526,"output":11845,"dollars":0.005590599999999999,"seconds":1445.362,"t":1793926191165}
+{"id":"theorem_proving_zh_blue_1080","topic":"algebra","k":0,"ok":false,"turns":2,"input":8549,"output":16000,"dollars":0.0072549,"seconds":1585.836,"failure":"reply too long","t":1793927777002}
+{"id":"omni_theorem_3054","topic":"algebra","k":0,"ok":true,"turns":1,"input":219,"output":4418,"dollars":0.0017891,"seconds":454.398,"t":1793928231404}
+{"id":"omni_theorem_2597","topic":"algebra","k":0,"ok":false,"turns":2,"input":8581,"output":16000,"dollars":0.0072581,"seconds":1631.639,"failure":"reply too long","t":1793929863044}
+{"id":"theorem_proving_zh_blue_1247","topic":"algebra","k":0,"ok":false,"turns":2,"input":8486,"output":16000,"dollars":0.007248600000000001,"seconds":1635.14,"failure":"reply too long","t":1793931498186}

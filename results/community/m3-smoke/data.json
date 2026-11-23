@@ -1,0 +1,53 @@
+{
+ "id": "m3-smoke",
+ "k": 3,
+ "counted": [
+  "C3",
+  "A3",
+  "C4",
+  "X1",
+  "B3",
+  "B5",
+  "X2",
+  "A5"
+ ],
+ "runs": [
+  {
+   "society": "choose-0.2",
+   "rep": 1,
+   "runId": "m3-smoke-r1-choose-0.2",
+   "stats": {
+    "rules": "oso",
+    "targetsSolved": 5,
+    "countedSolved": 5,
+    "counted": 8,
+    "conjecturesProved": 0,
+    "sharedAtOnce": 1,
+    "sharedOfChosen": 1,
+    "noChoice": 0,
+    "lemmaSize": 111.875,
+    "builtOnOthers": 6,
+    "deepestTarget": 5,
+    "value": 124,
+    "spent": 0.20797703623200003,
+    "budget": 0.2,
+    "actions": 36,
+    "lemmasAccepted": 8,
+    "lemmasDuplicate": 0,
+    "targetsDuplicate": 6,
+    "errors": 0,
+    "trivial": 0,
+    "failed": 17,
+    "plansUnusable": 0,
+    "published": 13,
+    "neverPublished": 6,
+    "earnings": [
+     9.080474309781009,
+     54.421897239124036,
+     59.57762845109497,
+     27.32
+    ]
+   }
+  }
+ ]
+}

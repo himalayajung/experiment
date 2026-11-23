@@ -1,0 +1,1 @@
+{"id":"simple","title":"The one-chain check: shared vs. hidden progress","seeds":1000,"firstSeed":1,"rows":["N 1, shared","N 1, hidden","N 2, shared","N 2, hidden","N 4, shared","N 4, hidden","N 8, shared","N 8, hidden","N 16, shared","N 16, hidden"]}

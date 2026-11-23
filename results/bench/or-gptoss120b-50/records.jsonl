@@ -1,0 +1,50 @@
+{"id":"omni_theorem_3018","topic":"algebra","k":0,"ok":true,"turns":1,"input":317,"output":1556,"dollars":0.000190131,"seconds":94.796,"t":1793998089289}
+{"id":"omni_theorem_2597","topic":"algebra","k":0,"ok":false,"turns":3,"input":1199,"output":4978,"dollars":0.0006398570000000001,"seconds":26.276,"failure":"no proof in the reply","t":1793998115565}
+{"id":"theorem_proving_zh_blue_1080","topic":"algebra","k":0,"ok":false,"turns":3,"input":10731,"output":18983,"dollars":0.002581868,"seconds":144.798,"failure":"no proof in the reply","t":1793998139291}
+{"id":"omni_theorem_3054","topic":"algebra","k":0,"ok":false,"turns":3,"input":3129,"output":12041,"dollars":0.0015288860000000001,"seconds":176.525,"failure":"Lean rejected the proof","t":1793998171018}
+{"id":"omni_theorem_2816","topic":"algebra","k":0,"ok":false,"turns":3,"input":1712,"output":6078,"dollars":0.00078931,"seconds":62.606,"failure":"Lean rejected the proof","t":1793998201898}
+{"id":"theorem_proving_zh_blue_1247","topic":"algebra","k":0,"ok":false,"turns":3,"input":1642,"output":16032,"dollars":0.001991754,"seconds":117.732,"failure":"Lean rejected the proof","t":1793998233297}
+{"id":"aime_all_1993_4","topic":"algebra","k":0,"ok":false,"turns":3,"input":3757,"output":8111,"dollars":0.0011010599999999998,"seconds":74.519,"failure":"Lean rejected the proof","t":1793998245538}
+{"id":"omni_theorem_4105","topic":"algebra","k":0,"ok":false,"turns":3,"input":1190,"output":7495,"dollars":0.000943157,"seconds":48.248,"failure":"no proof in the reply","t":1793998250148}
+{"id":"quantitative_reasoning_zh_blue_558","topic":"algebra","k":0,"ok":true,"turns":1,"input":290,"output":6047,"dollars":0.000740489,"seconds":41.036,"t":1793998274334}
+{"id":"u-math_1044","topic":"algebra","k":0,"ok":false,"turns":3,"input":1809,"output":2429,"dollars":0.000350726,"seconds":28.886,"failure":"no proof in the reply","t":1793998274425}
+{"id":"omni_theorem_1580","topic":"algebra","k":0,"ok":false,"turns":3,"input":1300,"output":5698,"dollars":0.000729926,"seconds":41.576,"failure":"Lean rejected the proof","t":1793998315911}
+{"id":"quantitative_reasoning_zh_blue_805","topic":"algebra","k":0,"ok":false,"turns":3,"input":3092,"output":19115,"dollars":0.002411687,"seconds":141.272,"failure":"Lean rejected the proof","t":1793998391420}
+{"id":"theorem_proving_zh_blue_1576","topic":"algebra","k":0,"ok":false,"turns":3,"input":5747,"output":17549,"dollars":0.002303544,"seconds":136.296,"failure":"no proof in the reply","t":1793998410721}
+{"id":"omni_theorem_388","topic":"algebra","k":0,"ok":false,"turns":3,"input":940,"output":8880,"dollars":0.0009566560000000001,"seconds":84.996,"failure":"Lean rejected the proof","t":1793998476418}
+{"id":"theorem_proving_zh_blue_1281","topic":"algebra","k":0,"ok":false,"turns":3,"input":5693,"output":18630,"dollars":0.002433075,"seconds":161.088,"failure":"Lean rejected the proof","t":1793998477000}
+{"id":"omni_theorem_639","topic":"algebra","k":0,"ok":false,"turns":3,"input":1075,"output":8485,"dollars":0.001007819,"seconds":89.141,"failure":"no proof in the reply","t":1793998499863}
+{"id":"u-math_389","topic":"algebra","k":0,"ok":false,"turns":3,"input":1142,"output":12547,"dollars":0.001347539,"seconds":133.905,"failure":"Lean rejected the proof","t":1793998610905}
+{"id":"omni_theorem_2880","topic":"algebra","k":0,"ok":true,"turns":1,"input":269,"output":940,"dollars":0.00010604,"seconds":17.979,"t":1793998628885}
+{"id":"quantitative_reasoning_zh_blue_396","topic":"algebra","k":0,"ok":false,"turns":3,"input":3130,"output":12552,"dollars":0.001401616,"seconds":155.381,"failure":"Lean rejected the proof","t":1793998631800}
+{"id":"omni_theorem_3016","topic":"algebra","k":0,"ok":false,"turns":3,"input":1751,"output":11716,"dollars":0.00127652,"seconds":138.358,"failure":"Lean rejected the proof","t":1793998638221}
+{"id":"omni_theorem_4297","topic":"algebra","k":0,"ok":true,"turns":1,"input":334,"output":550,"dollars":0.000066478,"seconds":11.313,"t":1793998643113}
+{"id":"u-math_483","topic":"algebra","k":0,"ok":false,"turns":3,"input":1453,"output":2701,"dollars":0.000322081,"seconds":31.067,"failure":"no proof in the reply","t":1793998674180}
+{"id":"omni_theorem_3025","topic":"algebra","k":0,"ok":true,"turns":1,"input":234,"output":256,"dollars":0.00003324,"seconds":20.691,"t":1793998694872}
+{"id":"aime_all_1989_8","topic":"algebra","k":0,"ok":true,"turns":1,"input":452,"output":3213,"dollars":0.000349829,"seconds":66.018,"t":1793998694904}
+{"id":"aime_all_1987_14","topic":"algebra","k":0,"ok":true,"turns":1,"input":312,"output":473,"dollars":0.000041587,"seconds":19.554,"t":1793998714458}
+{"id":"omni_theorem_534","topic":"algebra","k":0,"ok":false,"turns":3,"input":1664,"output":10726,"dollars":0.0010591180000000002,"seconds":116.182,"failure":"Lean rejected the proof","t":1793998754404}
+{"id":"omni_theorem_933","topic":"algebra","k":0,"ok":false,"turns":3,"input":1472,"output":7376,"dollars":0.000581328,"seconds":79.704,"failure":"Lean rejected the proof","t":1793998794163}
+{"id":"u-math_234","topic":"algebra","k":0,"ok":false,"turns":3,"input":1227,"output":11729,"dollars":0.0009038310000000001,"seconds":129.733,"failure":"no proof in the reply","t":1793998824606}
+{"id":"quantitative_reasoning_zh_blue_880","topic":"algebra","k":0,"ok":false,"turns":3,"input":3649,"output":8968,"dollars":0.00074238,"seconds":108.93,"failure":"Lean rejected the proof","t":1793998863335}
+{"id":"u-math_1027","topic":"calculus","k":0,"ok":false,"turns":3,"input":1955,"output":6373,"dollars":0.000515603,"seconds":84.553,"failure":"Lean rejected the proof","t":1793998909161}
+{"id":"u-math_219","topic":"calculus","k":0,"ok":true,"turns":1,"input":293,"output":1541,"dollars":0.000121307,"seconds":25.954,"t":1793998935115}
+{"id":"omni_theorem_2364","topic":"algebra","k":0,"ok":false,"turns":3,"input":9260,"output":20409,"dollars":0.001632649,"seconds":230.871,"failure":"no proof in the reply","t":1793999025034}
+{"id":"u-math_1091","topic":"calculus","k":0,"ok":false,"turns":3,"input":1798,"output":13331,"dollars":0.0013098609999999998,"seconds":173.507,"failure":"Lean rejected the proof","t":1793999108623}
+{"id":"u-math_408","topic":"calculus","k":0,"ok":false,"turns":3,"input":9756,"output":22219,"dollars":0.001756875,"seconds":272.911,"failure":"Lean rejected the proof","t":1793999136246}
+{"id":"omni_theorem_629","topic":"combinatorics","k":0,"ok":false,"turns":3,"input":4037,"output":12490,"dollars":0.000884164,"seconds":170.859,"failure":"Lean rejected the proof","t":1793999195894}
+{"id":"omni_theorem_3453","topic":"applied","k":0,"ok":true,"turns":1,"input":256,"output":1059,"dollars":0.00016581,"seconds":11.123,"t":1793999207018}
+{"id":"omni_theorem_915","topic":"combinatorics","k":0,"ok":false,"turns":3,"input":1662,"output":10549,"dollars":0.0007148009999999999,"seconds":138.216,"failure":"Lean rejected the proof","t":1793999246840}
+{"id":"omni_theorem_3413","topic":"applied","k":0,"ok":true,"turns":1,"input":249,"output":858,"dollars":0.000059868,"seconds":18.211,"t":1793999265052}
+{"id":"omni_theorem_3129","topic":"applied","k":0,"ok":true,"turns":1,"input":234,"output":148,"dollars":0.000015652,"seconds":7.255,"t":1793999272307}
+{"id":"omni_theorem_2828","topic":"applied","k":0,"ok":true,"turns":1,"input":281,"output":994,"dollars":0.00015681,"seconds":13.01,"t":1793999285317}
+{"id":"quantitative_reasoning_zh_blue_68","topic":"combinatorics","k":0,"ok":false,"turns":3,"input":4465,"output":14883,"dollars":0.001047381,"seconds":170.252,"failure":"no proof in the reply","t":1793999306499}
+{"id":"theorem_proving_zh_blue_1134","topic":"geometry","k":0,"ok":false,"turns":3,"input":1227,"output":5996,"dollars":0.000461352,"seconds":83.774,"failure":"Lean rejected the proof","t":1793999390274}
+{"id":"quantitative_reasoning_zh_blue_37","topic":"applied","k":0,"ok":false,"turns":3,"input":1620,"output":15814,"dollars":0.001121702,"seconds":191.399,"failure":"Lean rejected the proof","t":1793999398418}
+{"id":"aime_all_2007_I_2","topic":"applied","k":0,"ok":false,"turns":3,"input":6211,"output":14022,"dollars":0.001160302,"seconds":196.852,"failure":"Lean rejected the proof","t":1793999482170}
+{"id":"aime_all_2018_I_11","topic":"number theory","k":0,"ok":false,"turns":3,"input":1048,"output":7145,"dollars":0.000542161,"seconds":111.18,"failure":"Lean rejected the proof","t":1793999509598}
+{"id":"aime_all_2015_II_3","topic":"number theory","k":0,"ok":false,"turns":3,"input":2917,"output":10657,"dollars":0.000840953,"seconds":122.349,"failure":"Lean rejected the proof","t":1793999604520}
+{"id":"omni_theorem_3079","topic":"number theory","k":0,"ok":true,"turns":1,"input":240,"output":1372,"dollars":0.000120576,"seconds":19.073,"t":1793999623593}
+{"id":"omni_theorem_4271","topic":"number theory","k":0,"ok":false,"turns":3,"input":1017,"output":3248,"dollars":0.000274702,"seconds":34.639,"failure":"no proof in the reply","t":1793999658232}
+{"id":"omni_theorem_2243","topic":"geometry","k":0,"ok":false,"turns":3,"input":10205,"output":24924,"dollars":0.002022912,"seconds":288.295,"failure":"Lean rejected the proof","t":1793999678570}
+{"id":"omni_theorem_1308","topic":"number theory","k":0,"ok":false,"turns":3,"input":20521,"output":20453,"dollars":0.0019673480000000003,"seconds":233.598,"failure":"no proof in the reply","t":1793999743197}
