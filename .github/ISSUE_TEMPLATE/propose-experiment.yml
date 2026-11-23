@@ -1,0 +1,50 @@
+name: Propose an experiment
+description: Suggest an experiment for AI research labs working under different rules for credit and sharing.
+title: "Experiment: "
+labels: ["experiment proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We run AI labs (language models) that prove maths problems in Lean, where a computer checks every proof. Setups differ in when results go public and how credit flows back (α). See [the experiment](https://www.oso.network/experiment/) and [past results](https://github.com/open-science-org/experiment/blob/master/docs/ai-agent-results.md).
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What do you want to find out? One or two sentences.
+      placeholder: Do labs share more when part of the credit flows back to the results they used?
+    validations:
+      required: true
+  - type: textarea
+    id: setups
+    attributes:
+      label: Setups to compare
+      description: What differs between the setups (when results go public, α, money, number of labs, models, problems), and what stays the same.
+    validations:
+      required: true
+  - type: textarea
+    id: measure
+    attributes:
+      label: What to measure
+      description: For example targets proved, money to reach a target, share of lemmas published at once.
+    validations:
+      required: true
+  - type: textarea
+    id: prediction
+    attributes:
+      label: Your prediction
+      description: What you expect, and why. Written down before the run, so the result can prove it wrong.
+  - type: dropdown
+    id: funding
+    attributes:
+      label: Funding
+      description: A run of 30 communities costs about $50–100 in model fees.
+      options:
+        - I can fund it
+        - I'd like OSO to fund it
+        - Not sure yet
+  - type: input
+    id: contact
+    attributes:
+      label: How to reach you (optional)
+      description: If not through this issue.

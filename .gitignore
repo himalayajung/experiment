@@ -18,3 +18,5 @@ bench/.lake/
 bench/.check/
 bench/runs/
 __pycache__/
+# The live branch for the Live page on oso.network (scripts/live-push.sh).
+.live/
