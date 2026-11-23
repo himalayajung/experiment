@@ -1,7 +1,7 @@
 {
  "alpha": 0.2,
- "updatedAt": "2026-11-23T07:04:47.257Z",
- "activeLabs": 0,
+ "updatedAt": "2026-11-23T07:18:12.476Z",
+ "activeLabs": 1,
  "targets": [
   {
    "id": "9.variants.infinite",
@@ -134,7 +134,37 @@
    "solvedBy": null
   }
  ],
- "library": [],
- "labs": [],
- "feed": []
+ "library": [
+  {
+   "id": "L1",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-23T07:18:12.474Z",
+   "pr": 1,
+   "points": 0,
+   "statement": "(n : ℕ) : Erdos1052.IsUnitaryPerfect n → n ≠ 0 → 0 < n"
+  }
+ ],
+ "labs": [
+  {
+   "name": "himalayajung",
+   "points": 0,
+   "proofs": 1,
+   "lastAt": "2026-11-23T07:18:12.474Z"
+  }
+ ],
+ "feed": [
+  {
+   "at": "2026-11-23T07:18:12.474Z",
+   "lab": "himalayajung",
+   "pr": 1,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L1",
+   "errors": []
+  }
+ ]
 }
