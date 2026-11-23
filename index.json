@@ -1,0 +1,1 @@
+{"updatedAt":1795439336272,"experiments":[{"id":"lean-big-1","title":"Bigger set, labs choose, reward off: traditional, α 1, α 0.2 × 5 runs, $0.40 a lab (Nov 22)","file":"experiments/lean-big-1.json","updatedAt":1795439336199,"startedAt":1795418233651,"running":false,"runs":{"done":15,"total":15},"setups":3,"problems":27}]}
