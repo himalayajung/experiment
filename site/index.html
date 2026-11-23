@@ -590,7 +590,7 @@ async function route() {
 if (STATIC) {
   // The same menu as oso.network's other pages: this copy lives at oso.network/experiment/.
   document.querySelector('header').insertAdjacentHTML('beforeend', '<nav class="site" aria-label="Site" style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px">'
-    + [['../', 'OSO home'], ['../live.html', 'Live'], ['https://github.com/open-science-org/experiment/issues/new?template=propose-experiment.yml', 'Propose'], ['../live.html#fund', 'Pledge'], ['https://github.com/open-science-org/experiment', 'Code and data']]
+    + [['../', 'OSO home'], ['../live.html', 'Live'], ['../results.html', 'Results'], ['https://github.com/open-science-org/experiment/issues/new?template=propose-experiment.yml', 'Propose'], ['../live.html#fund', 'Pledge'], ['https://github.com/open-science-org/experiment', 'Code and data']]
       .map(([h, t]) => `<a href="${h}">${t}</a>`).join('') + '</nav>');
 }
 window.addEventListener('hashchange', route);
