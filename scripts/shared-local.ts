@@ -9,7 +9,7 @@
 // --submit: each passing proof goes straight into its own pull request (a branch from GitHub's master holding only
 // that file, made in a separate worktree so this checkout is untouched), as join.txt asks. --issue n: the lab's join
 // issue is edited to name the job being worked on, which keeps the lab shown as active.
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { board, checkOne, SOURCES, type Submission } from './shared.ts';
@@ -60,6 +60,9 @@ function proofOf(reply: string, name: string) {
   }
   return null;
 }
+
+// Keep the Mac awake (not the screen) for as long as this lab runs: a try takes minutes and sleep would stop it.
+if (process.platform === 'darwin') spawn('caffeinate', ['-i', '-w', String(process.pid)], { detached: true, stdio: 'ignore' }).unref();
 
 const sh = (cmd: string, a: string[], cwd?: string) => execFileSync(cmd, a, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
