@@ -1,11 +1,16 @@
-// A lab in the shared run on a local model (Ollama): `node scripts/shared-local.ts <jobs.json> --lab <github user> [--model m] [--tries n]`.
+// A lab in the shared run on a local model (Ollama):
+//   node scripts/shared-local.ts <jobs.json> --lab <github user> [--model m] [--tries n] [--submit] [--issue n]
 // For testing the shared run end to end and for free, as join.txt describes for any agent: the model writes a proof for
 // each job, scripts/shared.ts checks it (same checker as the pull request), and the first passing proof of each job is
 // written to shared-run/submissions/ for a pull request. jobs.json lists what to try:
 //   [{ "kind": "target", "target": "1052.even_of_isUnitaryPerfect" },
 //    { "kind": "lemma", "name": "one_mem", "statement": "(n : ℕ) (hn : 1 < n) : 1 ∈ properUnitaryDivisors n", "open": ["Erdos1052"], "problem": "1052" }]
-// Proofs only from the model; the statements of lemmas are the job file's. Nothing is pushed here.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// Proofs only from the model; the statements of lemmas are the job file's. Without --submit nothing leaves this Mac.
+// --submit: each passing proof goes straight into its own pull request (a branch from GitHub's master holding only
+// that file, made in a separate worktree so this checkout is untouched), as join.txt asks. --issue n: the lab's join
+// issue is edited to name the job being worked on, which keeps the lab shown as active.
+import { execFileSync } from 'node:child_process';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { board, checkOne, SOURCES, type Submission } from './shared.ts';
 
@@ -13,6 +18,7 @@ interface Job { kind: 'target' | 'lemma'; target?: string; name?: string; statem
 const args = process.argv.slice(2);
 const flag = (k: string, d: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
 const jobs: Job[] = JSON.parse(readFileSync(args[0], 'utf8'));
+const submit = args.includes('--submit'), issue = flag('--issue', '');
 const lab = flag('--lab', ''), model = flag('--model', 'hf.co/mradermacher/Goedel-Prover-V2-8B-GGUF:Q4_K_M'), tries = Number(flag('--tries', '3'));
 if (!lab) throw new Error('--lab <github user> is required');
 const work = join('shared-run', '.local-lab'), out = join('shared-run', 'submissions');
@@ -55,12 +61,39 @@ function proofOf(reply: string, name: string) {
   return null;
 }
 
+const sh = (cmd: string, a: string[], cwd?: string) => execFileSync(cmd, a, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
+
+/** One pull request for one passing proof: a fresh branch from GitHub's master with only that file. */
+function openPullRequest(file: string, label: string, sub: Submission) {
+  const branch = `shared-${lab}-${label.replace(/[^A-Za-z0-9_-]+/g, '-')}-${Date.now().toString(36)}`, tree = join(work, 'tree');
+  sh('git', ['fetch', '-q', 'origin', 'master']);
+  sh('git', ['worktree', 'add', '-q', '-B', branch, tree, 'origin/master']);
+  try {
+    mkdirSync(join(tree, out), { recursive: true });
+    copyFileSync(file, join(tree, out, file.split('/').pop()!));
+    sh('git', ['add', join(out, file.split('/').pop()!)], tree);
+    sh('git', ['commit', '-q', '-m', `Shared run: ${sub.kind} ${label}`], tree);
+    sh('git', ['push', '-q', 'origin', branch], tree);
+    const what = sub.kind === 'target' ? `target ${sub.target}` : `lemma ${label}: ${sub.statement}`;
+    return sh('gh', ['pr', 'create', '--base', 'master', '--head', branch, '--title', `Shared run: ${sub.kind} ${label}`, '--body', `Lab ${lab}: ${what}. Proof by ${model.split('/').pop()} on a local Mac (scripts/shared-local.ts); it passed \`node scripts/shared.ts check\` before submitting.`], tree).split('\n').pop();
+  } finally {
+    sh('git', ['worktree', 'remove', '--force', tree]);
+  }
+}
+
+/** Keep the lab's join issue saying what it is working on (and the lab active). */
+function working(on: string) {
+  if (!issue) return;
+  try { sh('gh', ['issue', 'edit', issue, '--repo', 'open-science-org/experiment', '--title', `Lab: working on ${on}`, '--body', `Target: ${on}\nAgent: ${model.split('/').pop()} on a local Mac (scripts/shared-local.ts)\nPlan: small lemmas toward the target, then the target`]); } catch (e) { console.log(`could not edit issue ${issue}: ${String(e).slice(0, 120)}`); }
+}
+
 const targets = board();
 for (const job of jobs) {
   const t = job.kind === 'target' ? targets.find((x) => x.id === job.target) : undefined;
   if (job.kind === 'target' && !t) { console.log(`skip: no target ${job.target}`); continue; }
   const problem = t?.problem ?? job.problem!, ns = `Erdos${problem}`;
   const label = job.kind === 'target' ? job.target! : job.name!;
+  working(job.kind === 'target' ? job.target! : `1052 lemma ${job.name}`);
   const sig = job.kind === 'target' ? t!.statement : job.statement!;
   const head = sig.trim().startsWith(':') || /^[({]/.test(sig.trim()) ? sig.trim() : `: ${sig.trim()}`;
   const prompt = `Complete the following Lean 4 code:\n\n\`\`\`lean4\nimport Mathlib\nimport Aesop\n\nset_option maxHeartbeats 400000\n\n${context(problem)}\n\ntheorem attempt ${head} := by\n  sorry\n\`\`\`\n\nBefore producing the Lean 4 code to formally prove the given theorem, provide a detailed proof plan outlining the main proof steps and strategies.\nThe plan should highlight key ideas, intermediate lemmas, and proof structures that will guide the construction of the final formal proof.`;
@@ -77,6 +110,11 @@ for (const job of jobs) {
     writeFileSync(file, JSON.stringify(sub, null, 1) + '\n');
     const v = await checkOne(file);
     console.log(`${label} try ${k}: ${v.ok ? 'PASS' : 'FAIL'} (${Math.round((Date.now() - t0) / 1000)} s)${v.ok ? '' : ' ' + v.errors[0]?.split('\n')[0].slice(0, 160)}`);
-    if (v.ok) { mkdirSync(out, { recursive: true }); writeFileSync(join(out, `${lab}-${label.replace(/[^A-Za-z0-9_]+/g, '-')}.json`), JSON.stringify(sub, null, 1) + '\n'); break; }
+    if (v.ok) {
+      const saved = join(work, `${lab}-${label.replace(/[^A-Za-z0-9_]+/g, '-')}.json`);
+      writeFileSync(saved, JSON.stringify(sub, null, 1) + '\n');
+      if (submit) { try { console.log(`${label}: pull request ${openPullRequest(saved, label, sub)}`); } catch (e) { console.log(`${label}: could not open the pull request: ${String(e).slice(0, 200)}`); } }
+      break;
+    }
   }
 }
