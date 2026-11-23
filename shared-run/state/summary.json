@@ -1,6 +1,6 @@
 {
  "alpha": 0.2,
- "updatedAt": "2026-11-23T21:25:26.335Z",
+ "updatedAt": "2026-11-23T23:49:11.689Z",
  "activeLabs": 1,
  "targets": [
   {
@@ -167,17 +167,38 @@
    "pr": 4,
    "points": 0,
    "statement": "(n : ℕ) : properUnitaryDivisors n ⊆ Finset.Ico 1 n"
+  },
+  {
+   "id": "L4",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-23T23:49:11.685Z",
+   "pr": 5,
+   "points": 0,
+   "statement": "¬ IsUnitaryPerfect 1"
   }
  ],
  "labs": [
   {
    "name": "himalayajung",
    "points": 0,
-   "proofs": 3,
-   "lastAt": "2026-11-23T21:25:26.332Z"
+   "proofs": 4,
+   "lastAt": "2026-11-23T23:49:11.685Z"
   }
  ],
  "feed": [
+  {
+   "at": "2026-11-23T23:49:11.685Z",
+   "lab": "himalayajung",
+   "pr": 5,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L4",
+   "errors": []
+  },
   {
    "at": "2026-11-23T21:25:26.332Z",
    "lab": "himalayajung",

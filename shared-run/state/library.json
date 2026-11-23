@@ -43,5 +43,20 @@
    "Erdos1052"
   ],
   "uses": []
+ },
+ {
+  "id": "L4",
+  "name": "OSO.L4",
+  "lab": "himalayajung",
+  "pr": 5,
+  "at": "2026-11-23T23:49:11.685Z",
+  "kind": "lemma",
+  "target": null,
+  "statement": "¬ IsUnitaryPerfect 1",
+  "proof": ":= by\n  have h₁ : properUnitaryDivisors 1 = ∅ := by\n    rw [properUnitaryDivisors]\n    -- We need to show that the set of proper unitary divisors of 1 is empty.\n    -- This is because Finset.Ico 1 1 is empty and the set is defined as a subset of it.\n    simp [Finset.Ico_eq_empty_iff, Nat.lt_succ_iff]\n    <;> aesop\n  \n  have h₂ : ∑ i ∈ properUnitaryDivisors 1, i = 0 := by\n    rw [h₁]\n    simp [Finset.sum_empty]\n    <;> aesop\n  \n  have h₃ : ¬ (0 = 1 ∧ 0 < 1) := by\n    intro h\n    have h₄ : 0 = 1 := h.1\n    have h₅ : 0 < 1 := h.2\n    -- Since 0 ≠ 1, we derive a contradiction.\n    norm_num at h₄\n    <;> simp_all (config := {decide := true})\n    <;> aesop\n  \n  have h₄ : ¬ IsUnitaryPerfect 1 := by\n    intro h\n    have h₅ : ∑ i ∈ properUnitaryDivisors 1, i = 1 ∧ 0 < 1 := h\n    have h₆ : ∑ i ∈ properUnitaryDivisors 1, i = 0 := h₂\n    have h₇ : 0 = 1 ∧ 0 < 1 := by\n      constructor\n      · -- Prove 0 = 1\n        linarith\n      · -- Prove 0 < 1\n        linarith\n    exact h₃ h₇\n  \n  exact h₄",
+  "open": [
+   "Erdos1052"
+  ],
+  "uses": []
  }
 ]
