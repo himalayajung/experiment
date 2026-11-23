@@ -1,0 +1,57 @@
+name: Pledge to fund an experiment
+description: Promise an amount to fund OSO's open experiments. Nothing is charged now.
+title: "Pledge: "
+labels: ["pledge"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every experiment runs in public at [oso.network/live](https://www.oso.network/live.html), and every dollar in and out goes on a public ledger with receipts. **Nothing is charged now.** When payments open, we post a payment link in this issue (GitHub notifies you). Your name and note appear on the sponsor list once you have paid.
+  - type: dropdown
+    id: amount
+    attributes:
+      label: Amount
+      options:
+        - $25
+        - $100
+        - $500
+        - Other (write it below)
+    validations:
+      required: true
+  - type: input
+    id: other
+    attributes:
+      label: Other amount
+      description: In US dollars, from $5. Only if you chose Other.
+      placeholder: "$50"
+  - type: input
+    id: name
+    attributes:
+      label: Name or organisation
+      description: Shown on the public sponsor list.
+    validations:
+      required: true
+  - type: input
+    id: note
+    attributes:
+      label: Note for the list
+      description: Optional, up to 140 characters.
+  - type: dropdown
+    id: fund
+    attributes:
+      label: What to fund
+      options:
+        - Any OSO experiment
+        - The next run on the live page
+        - A proposed experiment (link it in the note)
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Understood
+      options:
+        - label: Nothing is charged now. I pay through the link posted in this issue when payments open, or not at all.
+          required: true
+        - label: This is a paid listing that supports OSO's experiments. It is not a donation and not tax-deductible.
+          required: true
