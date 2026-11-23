@@ -22,3 +22,4 @@ __pycache__/
 .live/
 shared-run/.lake/
 shared-run/.check/
+.live.lock/
