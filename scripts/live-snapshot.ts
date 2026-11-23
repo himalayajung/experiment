@@ -74,6 +74,8 @@ const feed = plan.societies.flatMap((key) => Array.from({ length: plan.repeats }
     });
 }).flat()).sort((a, b) => (b.t ?? 0) - (a.t ?? 0)).slice(0, 60);
 
+// The graph runs to the most any run has spent so far (all the money once runs finish), so early progress is visible.
+const reach = Math.min(cap, Math.max(cap / 400, ...setups.flatMap((s) => s.reps.map((r) => r.spent))));
 const snapshot = {
   id, title: EXPERIMENT_NAMES[id] ?? id, updatedAt: Date.now(), startedAt: plan.startedAt,
   problems, moneyPerRun: cap,
@@ -85,7 +87,7 @@ const snapshot = {
       key: s.key, label: s.label, params: s.params,
       runs: { done: s.reps.filter((r) => r.status === 'done').length, running: s.reps.filter((r) => r.status === 'running').length, total: plan.repeats },
       // Line graph: mean over started runs of targets proved for the money spent, money as a share of a run's money.
-      curve: started.length ? Array.from({ length: GRID + 1 }, (_, g) => { const m = cap * g / GRID; return [m, started.reduce((a, r) => a + at(r.steps, m), 0) / started.length]; }) : [],
+      curve: started.length ? Array.from({ length: GRID + 1 }, (_, g) => { const m = reach * g / GRID; return [m, started.reduce((a, r) => a + at(r.steps, m), 0) / started.length]; }) : [],
       // How many runs proved each target.
       proved: Object.fromEntries(tasks.map((t) => [t.publicId, s.reps.filter((r) => r.targets.includes(t.publicId)).length])),
       reps: s.reps.map(({ steps: _, ...r }) => r),
