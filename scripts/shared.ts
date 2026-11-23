@@ -37,6 +37,13 @@ const write = (f: string, d: unknown) => { mkdirSync(STATE, { recursive: true })
 export const board = () => read<Target[]>(join(STATE, 'board.json'), []);
 export const library = () => read<Entry[]>(join(STATE, 'library.json'), []);
 
+/** A doc comment in plain text: LaTeX dollars and the common commands dropped or turned into symbols. */
+function plainWords(doc: string) {
+  const SYM: Record<string, string> = { le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠', in: '∈', notin: '∉', cdot: '·', times: '×', to: '→', infty: '∞', ll: '≪', gg: '≫', sim: '∼', mid: '∣', subseteq: '⊆', subset: '⊂', alpha: 'α', epsilon: 'ε', varepsilon: 'ε', delta: 'δ', ldots: '…', dots: '…', cdots: '⋯', mathbb: '', mathrm: '', operatorname: '', text: '', textbf: '', emph: '', binom: 'binom', lfloor: '⌊', rfloor: '⌋', lceil: '⌈', rceil: '⌉', log: 'log', max: 'max', min: 'min', gcd: 'gcd', sum: 'Σ', prod: 'Π' };
+  return doc.replace(/\\mathbb\{([A-Z])\}/g, (_, c: string) => ({ N: 'ℕ', Z: 'ℤ', Q: 'ℚ', R: 'ℝ', C: 'ℂ' } as Record<string, string>)[c] ?? c)
+    .replace(/\\([a-zA-Z]+)/g, (_, w: string) => (w in SYM ? SYM[w] : w)).replace(/\$+/g, '').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 /** The board from the pinned formal-conjectures sources: every statement still proved by `sorry` is a target. */
 function makeBoard(): Target[] {
   const out: Target[] = [];
@@ -50,7 +57,7 @@ function makeBoard(): Target[] {
       const short = m[4];
       out.push({
         id: `${p}.${short.replace(/^erdos_\d+\.?/, '') || 'main'}`, problem: p, name: `${ns}.${short}`, status, bounty: BOUNTY[status],
-        plain: (m[1] ?? '').replace(/\s+/g, ' ').trim(), statement: m[5].replace(/\s+/g, ' ').trim(),
+        plain: plainWords(m[1] ?? ''), statement: m[5].replace(/\s+/g, ' ').trim(),
       });
     }
   }
