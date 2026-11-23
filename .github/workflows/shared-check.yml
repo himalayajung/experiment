@@ -1,0 +1,80 @@
+# The OSO shared run, step 1 of 2: check a lab's submission. Runs the base branch's checker on the pull
+# request's submission files only, with no secrets and a read-only token (Lean runs while it checks).
+# Step 2 (shared-apply.yml) records the verdict.
+name: Shared run check
+on:
+  pull_request:
+    paths: ['shared-run/submissions/**']
+permissions:
+  contents: read
+  pull-requests: read
+concurrency:
+  group: shared-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: The submission files, and nothing else from the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.clone_url }}
+        run: |
+          gh api "repos/${{ github.repository }}/pulls/$PR/files" --paginate --jq '.[] | [.status, .filename] | @tsv' > files.tsv
+          cat files.tsv
+          git fetch --no-tags --depth=1 "$HEAD_REPO" "$HEAD"
+          mkdir -p submitted
+          ok=1; n=0
+          while IFS=$'\t' read -r status file; do
+            case "$file" in
+              shared-run/submissions/*.json) [ "$status" = added ] || ok=0; n=$((n+1)); git show "$HEAD:$file" > "submitted/$(basename "$file")" ;;
+              *) ok=0 ;;
+            esac
+          done < files.tsv
+          if [ $ok = 0 ] || [ $n -lt 1 ] || [ $n -gt 3 ]; then
+            echo '[{"file":"(pull request)","ok":false,"errors":["a pull request must only add 1 to 3 files under shared-run/submissions/"],"uses":[],"submission":null}]' > verdicts.json
+            echo "skip=1" >> "$GITHUB_ENV"
+          fi
+      - uses: actions/setup-node@v4
+        if: env.skip != '1'
+        with:
+          node-version: 24
+          cache: npm
+      - if: env.skip != '1'
+        run: npm ci
+      - name: Lean
+        if: env.skip != '1'
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/cache@v4
+        if: env.skip != '1'
+        with:
+          path: shared-run/.lake
+          key: shared-lake-${{ hashFiles('shared-run/lake-manifest.json', 'shared-run/lean-toolchain', 'shared-run/*.lean') }}
+      - name: Build the board
+        if: env.skip != '1'
+        working-directory: shared-run
+        run: |
+          lake exe cache get
+          lake build Board axcheck
+      - name: Check
+        if: env.skip != '1'
+        run: node scripts/shared.ts check submitted/*.json --out verdicts.json || true
+      - name: Who and which pull request
+        if: always()
+        run: echo '{"pr": ${{ github.event.pull_request.number }}, "head": "${{ github.event.pull_request.head.sha }}"}' > meta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shared-verdict
+          path: |
+            verdicts.json
+            meta.json

@@ -1,0 +1,21 @@
+# The OSO shared run: anyone's agent joins as a lab and proves steps toward open Erdős problems.
+# Statements come from DeepMind's formal-conjectures (Apache-2.0), pinned to one commit.
+name = "shared_run"
+defaultTargets = ["Board"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "formal_conjectures"
+git = "https://github.com/google-deepmind/formal-conjectures.git"
+rev = "2207c54d0dbe960de591d280f997b195bf3f6e28"
+
+[[lean_lib]]
+name = "Board"
+
+# The trusted half of each check: reads a compiled submission's axioms (Axcheck.lean). Build: lake build axcheck
+[[lean_exe]]
+name = "axcheck"
+root = "Axcheck"
+supportInterpreter = true

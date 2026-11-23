@@ -1,0 +1,140 @@
+{
+ "alpha": 0.2,
+ "updatedAt": "2026-11-23T07:04:47.257Z",
+ "activeLabs": 0,
+ "targets": [
+  {
+   "id": "9.variants.infinite",
+   "problem": "9",
+   "name": "Erdos9.erdos_9.variants.infinite",
+   "status": "solved",
+   "bounty": 100,
+   "plain": "The set is known to be infinite. In [Er77c] Erdős credits Schinzel with proving that there are infinitely many odd integers not of this form, but gives no reference. [Er77c] Erdős, P., _Problems and results on combinatorial number theory. III._.",
+   "statement": ": Erdos9A.Infinite",
+   "solvedBy": null
+  },
+  {
+   "id": "9.main",
+   "problem": "9",
+   "name": "Erdos9.erdos_9",
+   "status": "open",
+   "bounty": 1000,
+   "plain": "Is the upper density of the set of odd numbers that cannot be expressed as a prime plus two powers of 2 positive?",
+   "statement": ": 0 < Erdos9A.upperDensity",
+   "solvedBy": null
+  },
+  {
+   "id": "23.variants.n1",
+   "problem": "23",
+   "name": "Erdos23.erdos_23.variants.n1",
+   "status": "test",
+   "bounty": 10,
+   "plain": "Every triangle-free graph on $5$ vertices can be made bipartite by removing at most $1$ edge. This is the $n = 1$ case of Erdős Problem 23.",
+   "statement": ": ∀ (G : SimpleGraph (Fin 5)), G.CliqueFree 3 → ∃ (H : SimpleGraph (Fin 5)), H ≤ G ∧ H.IsBipartite ∧ (G.edgeFinset \\ H.edgeFinset).card ≤ 1",
+   "solvedBy": null
+  },
+  {
+   "id": "23.variants.n5",
+   "problem": "23",
+   "name": "Erdos23.erdos_23.variants.n5",
+   "status": "solved",
+   "bounty": 100,
+   "plain": "Every triangle-free graph on $25$ vertices can be made bipartite by removing at most $25$ edges. This is the $n = 5$ case of Erdős Problem 23. It follows from the high-density range of Balogh-Clemen-Lidicky together with McKay's complete catalogue of the 23-vertex extremal graphs for bipartization of triangle-free graphs.",
+   "statement": ": ∀ (G : SimpleGraph (Fin 25)), G.CliqueFree 3 → ∃ (H : SimpleGraph (Fin 25)), H ≤ G ∧ H.IsBipartite ∧ (G.edgeFinset \\ H.edgeFinset).card ≤ 25",
+   "solvedBy": null
+  },
+  {
+   "id": "23.variants.n5_tight",
+   "problem": "23",
+   "name": "Erdos23.erdos_23.variants.n5_tight",
+   "status": "solved",
+   "bounty": 100,
+   "plain": "There exists a triangle-free graph on $25$ vertices such that at least $25$ edges must be removed to make it bipartite. The balanced blow-up of $C_5$ with five parts of size $5$ witnesses this.",
+   "statement": ": ∃ (G : SimpleGraph (Fin 25)), G.CliqueFree 3 ∧ ∀ (H : SimpleGraph (Fin 25)), H ≤ G → H.IsBipartite → 25 ≤ (G.edgeFinset \\ H.edgeFinset).card",
+   "solvedBy": null
+  },
+  {
+   "id": "23.blowupC5_tight",
+   "problem": "23",
+   "name": "Erdos23.blowupC5_tight",
+   "status": "test",
+   "bounty": 10,
+   "plain": "The blow-up of $C_5$ shows that the bound $n^2$ in Erdős Problem 23 is tight: any bipartite subgraph must omit at least $n^2$ edges.",
+   "statement": "(n : ℕ) (_hn : 0 < n) (H : SimpleGraph (ZMod 5 × Fin n)) (hH : H ≤ blowupC5 n) (hBip : H.IsBipartite) : n ^ 2 ≤ ((blowupC5 n).edgeFinset \\ H.edgeFinset).card",
+   "solvedBy": null
+  },
+  {
+   "id": "23.main",
+   "problem": "23",
+   "name": "Erdos23.erdos_23",
+   "status": "open",
+   "bounty": 1000,
+   "plain": "Can every triangle-free graph on $5n$ vertices be made bipartite by deleting at most $n^2$ edges?",
+   "statement": ": ∀ (n : ℕ) (V : Type) [Fintype V], Fintype.card V = 5 * n → ∀ (G : SimpleGraph V), G.CliqueFree 3 → ∃ (H : SimpleGraph V), H ≤ G ∧ H.IsBipartite ∧ (G.edgeFinset \\ H.edgeFinset).card ≤ n^2",
+   "solvedBy": null
+  },
+  {
+   "id": "1052.main",
+   "problem": "1052",
+   "name": "Erdos1052.erdos_1052",
+   "status": "open",
+   "bounty": 1000,
+   "plain": "Are there only finitely many unitary perfect numbers?",
+   "statement": ": {n | IsUnitaryPerfect n}.Finite",
+   "solvedBy": null
+  },
+  {
+   "id": "1052.even_of_isUnitaryPerfect",
+   "problem": "1052",
+   "name": "Erdos1052.even_of_isUnitaryPerfect",
+   "status": "solved",
+   "bounty": 100,
+   "plain": "All unitary perfect numbers are even. Formal proof linked here provided by AlphaProof.",
+   "statement": "(n : ℕ) (hn : IsUnitaryPerfect n) : Even n",
+   "solvedBy": null
+  },
+  {
+   "id": "1052.isUnitaryPerfect_146361946186458562560000",
+   "problem": "1052",
+   "name": "Erdos1052.isUnitaryPerfect_146361946186458562560000",
+   "status": "test",
+   "bounty": 10,
+   "plain": "",
+   "statement": ": IsUnitaryPerfect 146361946186458562560000",
+   "solvedBy": null
+  },
+  {
+   "id": "1059.main",
+   "problem": "1059",
+   "name": "Erdos1059.erdos_1059",
+   "status": "open",
+   "bounty": 1000,
+   "plain": "Are there infinitely many primes $p$ such that $p - k!$ is composite for each $k$ such that $1 ≤ k! < p$?",
+   "statement": ": Set.Infinite {p | p.Prime ∧ AllFactorialSubtractionsComposite p}",
+   "solvedBy": null
+  },
+  {
+   "id": "1142.main",
+   "problem": "1142",
+   "name": "Erdos1142.erdos_1142",
+   "status": "open",
+   "bounty": 1000,
+   "plain": "Are there infinitely many $n > 2$ such that $n - 2^k$ is prime for all $k \\geq 1$ with $2^k < n$? The only known such $n$ are $4, 7, 15, 21, 45, 75, 105$ (OEIS [A039669](https://oeis.org/A039669)).",
+   "statement": ": Infinite { n | Erdos1142Prop n }",
+   "solvedBy": null
+  },
+  {
+   "id": "1142.variants.mientka_weitzenkamp",
+   "problem": "1142",
+   "name": "Erdos1142.erdos_1142.variants.mientka_weitzenkamp",
+   "status": "solved",
+   "bounty": 100,
+   "plain": "Mientka and Weitzenkamp [MiWe69] proved that the only $n \\leq 2^{44}$ such that $n > 2$ and $n - 2^k$ is prime for all $k \\geq 1$ with $2^k < n$ are $4, 7, 15, 21, 45, 75, 105$.",
+   "statement": ": { n : ℕ | n ≤ 2 ^ 44 ∧ Erdos1142Prop n } = {4, 7, 15, 21, 45, 75, 105}",
+   "solvedBy": null
+  }
+ ],
+ "library": [],
+ "labs": [],
+ "feed": []
+}
