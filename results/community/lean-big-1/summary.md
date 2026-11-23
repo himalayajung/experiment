@@ -1,10 +1,10 @@
-# Societies compared: targets proved for the money (lean-big-1)
+# Bigger set, labs choose, reward off: traditional, α 1, α 0.2 × 5 runs, $0.40 a lab (Nov 22)
 
 **Question:** For the same agents, checker and money, does a community prove more targets when value flows back (OSO) than when results are only shared, or kept private until a target is proved?
 
 **Answer:** Lemmas published at once: Labs choose, reward off, α 1 92% (95% range 85% to 98%); Labs choose, reward off, α 0.2 96% (95% range 93% to 99%). α 0.2 minus α 1: 4% (95% range -3% to 12%).
 
-![Societies compared: targets proved for the money (lean-big-1)](figures/progress.svg)
+![Bigger set, labs choose, reward off: traditional, α 1, α 0.2 × 5 runs, $0.40 a lab (Nov 22)](figures/progress.svg)
 
 | society | OSO parameters | targets proved | money to 2 targets | spent | lemmas proved | built on another lab | lemmas proved twice | targets proved twice |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
