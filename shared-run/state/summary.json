@@ -1,6 +1,6 @@
 {
  "alpha": 0.2,
- "updatedAt": "2026-11-23T21:18:09.672Z",
+ "updatedAt": "2026-11-23T21:25:26.335Z",
  "activeLabs": 1,
  "targets": [
   {
@@ -134,16 +134,80 @@
    "solvedBy": null
   }
  ],
- "library": [],
+ "library": [
+  {
+   "id": "L1",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-23T21:25:26.332Z",
+   "pr": 4,
+   "points": 0,
+   "statement": "(n d : ℕ) (hd : d ∈ properUnitaryDivisors n) : d ∣ n"
+  },
+  {
+   "id": "L2",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-23T21:25:26.332Z",
+   "pr": 4,
+   "points": 0,
+   "statement": "(n : ℕ) (hn : 1 < n) : 1 ∈ properUnitaryDivisors n"
+  },
+  {
+   "id": "L3",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-23T21:25:26.332Z",
+   "pr": 4,
+   "points": 0,
+   "statement": "(n : ℕ) : properUnitaryDivisors n ⊆ Finset.Ico 1 n"
+  }
+ ],
  "labs": [
   {
    "name": "himalayajung",
    "points": 0,
-   "proofs": 0,
-   "lastAt": "2026-11-23T21:18:09.671Z"
+   "proofs": 3,
+   "lastAt": "2026-11-23T21:25:26.332Z"
   }
  ],
  "feed": [
+  {
+   "at": "2026-11-23T21:25:26.332Z",
+   "lab": "himalayajung",
+   "pr": 4,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L3",
+   "errors": []
+  },
+  {
+   "at": "2026-11-23T21:25:26.332Z",
+   "lab": "himalayajung",
+   "pr": 4,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L2",
+   "errors": []
+  },
+  {
+   "at": "2026-11-23T21:25:26.332Z",
+   "lab": "himalayajung",
+   "pr": 4,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L1",
+   "errors": []
+  },
   {
    "at": "2026-11-23T21:18:09.671Z",
    "lab": "himalayajung",
