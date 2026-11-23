@@ -1,0 +1,73 @@
+// A lab in the shared run on a local model (Ollama): `node scripts/shared-local.ts <jobs.json> --lab <github user> [--model m] [--tries n]`.
+// For testing the shared run end to end and for free, as join.txt describes for any agent: the model writes a proof for
+// each job, scripts/shared.ts checks it (same checker as the pull request), and the first passing proof of each job is
+// written to shared-run/submissions/ for a pull request. jobs.json lists what to try:
+//   [{ "kind": "target", "target": "1052.even_of_isUnitaryPerfect" },
+//    { "kind": "lemma", "name": "one_mem", "statement": "(n : ℕ) (hn : 1 < n) : 1 ∈ properUnitaryDivisors n", "open": ["Erdos1052"], "problem": "1052" }]
+// Proofs only from the model; the statements of lemmas are the job file's. Nothing is pushed here.
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { board, checkOne, SOURCES, type Submission } from './shared.ts';
+
+interface Job { kind: 'target' | 'lemma'; target?: string; name?: string; statement?: string; open?: string[]; problem?: string }
+const args = process.argv.slice(2);
+const flag = (k: string, d: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
+const jobs: Job[] = JSON.parse(readFileSync(args[0], 'utf8'));
+const lab = flag('--lab', ''), model = flag('--model', 'hf.co/mradermacher/Goedel-Prover-V2-8B-GGUF:Q4_K_M'), tries = Number(flag('--tries', '3'));
+if (!lab) throw new Error('--lab <github user> is required');
+const work = join('shared-run', '.local-lab'), out = join('shared-run', 'submissions');
+mkdirSync(work, { recursive: true });
+
+/** The problem file's definitions, without its theorems: the context the model needs to read the statement. */
+function context(problem: string) {
+  const text = readFileSync(join(SOURCES, `${problem}.lean`), 'utf8');
+  const body = text.slice(text.indexOf('namespace'));
+  // Keep definitions; drop every theorem or lemma (with its proof) up to the next blank line before a declaration.
+  return body.split(/\n(?=@\[|\/--|theorem |lemma |def |noncomputable |abbrev |end )/).filter((b) => !/^(@\[[^\]]*\]\s*)?(theorem|lemma) |^@\[category/.test(b.replace(/^\/--[\s\S]*?-\/\s*/, ''))).join('\n')
+    .replace(/\nend \S+\s*$/, '').trim();
+}
+
+async function ask(prompt: string) {
+  const r = await fetch('http://localhost:11434/api/generate', { method: 'POST', body: JSON.stringify({ model, prompt, stream: false, options: { num_predict: 8000, temperature: 0.6 } }) });
+  return ((await r.json()) as { response: string }).response;
+}
+
+/** The proof after `:= by` in the model's last Lean block for this theorem. */
+function proofOf(reply: string, name: string) {
+  const blocks = [...reply.matchAll(/```lean4?\n([\s\S]*?)```/g)].map((m) => m[1]);
+  for (const b of blocks.reverse()) {
+    const i = b.indexOf(`theorem ${name}`);
+    if (i < 0) continue;
+    const j = b.indexOf(':= by', i);
+    if (j < 0) continue;
+    const rest = b.slice(j + ':= by'.length).split(/\n(?=\S)/)[0];
+    if (rest.trim()) return ':= by' + rest.replace(/\s+$/, '');
+  }
+  return null;
+}
+
+const targets = board();
+for (const job of jobs) {
+  const t = job.kind === 'target' ? targets.find((x) => x.id === job.target) : undefined;
+  if (job.kind === 'target' && !t) { console.log(`skip: no target ${job.target}`); continue; }
+  const problem = t?.problem ?? job.problem!, ns = `Erdos${problem}`;
+  const label = job.kind === 'target' ? job.target! : job.name!;
+  const sig = job.kind === 'target' ? t!.statement : job.statement!;
+  const head = sig.trim().startsWith(':') || /^[({]/.test(sig.trim()) ? sig.trim() : `: ${sig.trim()}`;
+  const prompt = `Complete the following Lean 4 code:\n\n\`\`\`lean4\nimport Mathlib\nimport Aesop\n\nset_option maxHeartbeats 400000\n\n${context(problem)}\n\ntheorem attempt ${head} := by\n  sorry\n\`\`\`\n\nBefore producing the Lean 4 code to formally prove the given theorem, provide a detailed proof plan outlining the main proof steps and strategies.\nThe plan should highlight key ideas, intermediate lemmas, and proof structures that will guide the construction of the final formal proof.`;
+  for (let k = 1; k <= tries; k++) {
+    const t0 = Date.now();
+    const reply = await ask(prompt);
+    writeFileSync(join(work, `${label}-${k}.txt`), reply);
+    const proof = proofOf(reply, 'attempt');
+    if (!proof) { console.log(`${label} try ${k}: no proof in the reply (${Math.round((Date.now() - t0) / 1000)} s)`); continue; }
+    const sub: Submission = job.kind === 'target'
+      ? { kind: 'target', target: job.target, proof, open: [ns], note: `local model ${model.split('/').pop()}` }
+      : { kind: 'lemma', statement: job.statement, proof, open: job.open ?? [ns], note: `${label}; local model ${model.split('/').pop()}` };
+    const file = join(work, `${label}-${k}.json`);
+    writeFileSync(file, JSON.stringify(sub, null, 1) + '\n');
+    const v = await checkOne(file);
+    console.log(`${label} try ${k}: ${v.ok ? 'PASS' : 'FAIL'} (${Math.round((Date.now() - t0) / 1000)} s)${v.ok ? '' : ' ' + v.errors[0]?.split('\n')[0].slice(0, 160)}`);
+    if (v.ok) { mkdirSync(out, { recursive: true }); writeFileSync(join(out, `${lab}-${label.replace(/[^A-Za-z0-9_]+/g, '-')}.json`), JSON.stringify(sub, null, 1) + '\n'); break; }
+  }
+}

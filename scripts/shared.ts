@@ -20,7 +20,7 @@ import { banned, compileAndRead, STANDARD_AXIOMS } from '../src/lean/checker.ts'
 
 export const ALPHA = 0.2;
 const DIR = resolve('shared-run'), STATE = join(DIR, 'state');
-const SOURCES = join(DIR, '.lake', 'packages', 'formal_conjectures', 'FormalConjectures', 'ErdosProblems');
+export const SOURCES = join(DIR, '.lake', 'packages', 'formal_conjectures', 'FormalConjectures', 'ErdosProblems');
 export const PROBLEMS = ['9', '23', '1052', '1059', '1142'];
 const BOUNTY: Record<string, number> = { open: 1000, solved: 100, test: 10 };
 
@@ -90,7 +90,7 @@ function checkText(sub: Submission, lib: Entry[], target: Target | undefined) {
 }
 
 /** Checks one submission against the current board and library. */
-async function checkOne(file: string): Promise<Verdict> {
+export async function checkOne(file: string): Promise<Verdict> {
   let sub: Submission;
   try { sub = JSON.parse(readFileSync(file, 'utf8')); } catch { return { file, ok: false, errors: ['the file is not valid JSON'], uses: [], submission: null }; }
   const errors: string[] = [];
