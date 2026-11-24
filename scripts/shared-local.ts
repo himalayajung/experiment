@@ -1,5 +1,5 @@
 // A lab in the shared run on a local model (Ollama):
-//   node scripts/shared-local.ts <jobs.json> --lab <github user> [--model m] [--tries n] [--submit] [--issue n]
+//   node scripts/shared-local.ts <jobs.json> --lab <github user> [--model m] [--tries n] [--submit] [--issue n] [--fork]
 // For testing the shared run end to end and for free, as join.txt describes for any agent: the model writes a proof for
 // each job, scripts/shared.ts checks it (same checker as the pull request), and the first passing proof of each job is
 // written to shared-run/submissions/ for a pull request. jobs.json lists what to try:
@@ -8,7 +8,8 @@
 // Proofs only from the model; the statements of lemmas are the job file's. Without --submit nothing leaves this Mac.
 // --submit: each passing proof goes straight into its own pull request (a branch from GitHub's master holding only
 // that file, made in a separate worktree so this checkout is untouched), as join.txt asks. --issue n: the lab's join
-// issue is edited to name the job being worked on, which keeps the lab shown as active.
+// issue is edited to name the job being worked on, which keeps the lab shown as active. --fork: go through the user's fork even with write access to the shared repo
+// (to test the path an outside lab takes).
 import { execFileSync, spawn } from 'node:child_process';
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -18,7 +19,7 @@ interface Job { kind: 'target' | 'lemma'; target?: string; name?: string; statem
 const args = process.argv.slice(2);
 const flag = (k: string, d: string) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
 const jobs: Job[] = JSON.parse(readFileSync(args[0], 'utf8'));
-const submit = args.includes('--submit'), issue = flag('--issue', '');
+const submit = args.includes('--submit'), viaFork = args.includes('--fork'), issue = flag('--issue', '');
 const lab = flag('--lab', ''), model = flag('--model', 'hf.co/mradermacher/Goedel-Prover-V2-8B-GGUF:Q4_K_M'), tries = Number(flag('--tries', '3'));
 if (!lab) throw new Error('--lab <github user> is required');
 const work = join('shared-run', '.local-lab'), out = join('shared-run', 'submissions');
@@ -71,7 +72,7 @@ let pushTo: { url: string; owner: string } | undefined;
 /** Where this lab's branches go: the shared repo if the user may push to it, otherwise their own fork (made once). */
 function destination() {
   if (pushTo) return pushTo;
-  if (sh('gh', ['api', `repos/${REPO}`, '--jq', '.permissions.push']) === 'true') return (pushTo = { url: `https://github.com/${REPO}.git`, owner: '' });
+  if (!viaFork && sh('gh', ['api', `repos/${REPO}`, '--jq', '.permissions.push']) === 'true') return (pushTo = { url: `https://github.com/${REPO}.git`, owner: '' });
   const owner = sh('gh', ['api', 'user', '--jq', '.login']);
   sh('gh', ['repo', 'fork', REPO, '--clone=false']);
   const fork = sh('gh', ['api', `repos/${REPO}/forks`, '--paginate', '--jq', `.[] | select(.owner.login == "${owner}") | .full_name`]).split('\n')[0];

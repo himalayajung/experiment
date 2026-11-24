@@ -1,11 +1,14 @@
-# The OSO shared run, step 2 of 2: record a checked submission. Trusted: runs the base branch's code only.
-# It takes the pull request and its author from GitHub (not from the check's files), accepts a pass only if
-# it matches the pull request's file exactly, adds it to the library, recomputes credit, comments and closes.
+# The OSO shared run, step 2 of 2: record checked submissions. Trusted: runs the base branch's code only.
+# scripts/shared-apply.sh records every checked pull request still open (see there why all of them, not one).
+# Started by each finished check, and every 30 minutes as a safety net.
 name: Shared run apply
 on:
   workflow_run:
     workflows: ['Shared run check']
     types: [completed]
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 permissions:
   contents: write
   pull-requests: write
@@ -16,43 +19,18 @@ concurrency:
   cancel-in-progress: false
 jobs:
   apply:
-    if: github.event.workflow_run.event == 'pull_request'
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.event == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: master
-      - uses: actions/download-artifact@v4
-        with:
-          name: shared-verdict
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ github.token }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Apply
+      - name: Apply every checked pull request still open
         env:
           GH_TOKEN: ${{ github.token }}
-          HEAD: ${{ github.event.workflow_run.head_sha }}
         run: |
-          pr=$(gh api "repos/${{ github.repository }}/commits/$HEAD/pulls" --jq '.[0].number' 2>/dev/null || true)
-          [ -n "$pr" ] || pr=$(gh pr list --state open --json number,headRefOid --jq ".[] | select(.headRefOid==\"$HEAD\") | .number" | head -1)
-          [ -n "$pr" ] || { echo "no open pull request for $HEAD"; exit 0; }
-          lab=$(gh pr view "$pr" --json author --jq .author.login)
-          mkdir -p prfiles
-          gh api "repos/${{ github.repository }}/pulls/$pr/files" --paginate --jq '.[] | select(.filename | startswith("shared-run/submissions/")) | .filename' | while read -r f; do
-            gh api "repos/${{ github.repository }}/contents/$f?ref=$HEAD" --jq .content | base64 -d > "prfiles/$(basename "$f")" || true
-          done
           npm ci --ignore-scripts
-          node scripts/shared.ts apply verdicts.json --lab "$lab" --pr "$pr" --files prfiles
-          node -e '
-            const v = require("./verdicts.json");
-            const lines = v.map((x) => x.ok ? `PASS ${x.file.split("/").pop()}${x.uses.length ? ` (builds on ${x.uses.join(", ")})` : ""}` : `FAIL ${x.file.split("/").pop()}\n\n\`\`\`\n${x.errors.join("\n").slice(0, 3000)}\n\`\`\``);
-            require("fs").writeFileSync("comment.md", `**Shared run checker**\n\n${lines.join("\n\n")}\n\nPassing proofs are now in the public library (shared-run/state/library.json); credit is on https://www.oso.network/shared.html. This pull request is closed either way: the library keeps the record.`);'
-          git config user.name "oso-shared-run"
-          git config user.email "shared-run@users.noreply.github.com"
-          git add shared-run/state
-          git commit -m "Shared run: verdict for #$pr by $lab" || echo "nothing to commit"
-          git push origin master
-          gh pr comment "$pr" --body-file comment.md
-          gh pr close "$pr"
+          sh scripts/shared-apply.sh
