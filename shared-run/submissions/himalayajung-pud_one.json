@@ -1,0 +1,9 @@
+{
+ "kind": "lemma",
+ "statement": "properUnitaryDivisors 1 = ∅",
+ "proof": ":= by\n  have h₁ : Finset.Ico 1 1 = ∅ := by\n    apply Finset.Ico_eq_empty_of_le\n    <;> norm_num\n  \n  have h₂ : properUnitaryDivisors 1 = ∅ := by\n    rw [show properUnitaryDivisors 1 = {d ∈ Finset.Ico 1 1 | d ∣ 1 ∧ d.Coprime (1 / d)} by rfl]\n    rw [h₁]\n    <;> simp [Finset.filter_empty]\n    <;> aesop\n  \n  apply h₂",
+ "open": [
+  "Erdos1052"
+ ],
+ "note": "pud_one; local model Goedel-Prover-V2-8B-GGUF:Q4_K_M"
+}
