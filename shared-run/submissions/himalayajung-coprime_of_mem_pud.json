@@ -1,0 +1,9 @@
+{
+ "kind": "lemma",
+ "statement": "(n d : ℕ) (hd : d ∈ properUnitaryDivisors n) : Nat.Coprime d (n / d)",
+ "proof": ":= by\n  have h_main : Nat.Coprime d (n / d) := by\n    have h₁ : d ∈ properUnitaryDivisors n := hd\n    have h₂ : d ∈ Finset.Ico 1 n ∧ d ∣ n ∧ d.Coprime (n / d) := by\n      simpa [properUnitaryDivisors] using h₁\n    exact h₂.2.2\n  exact h_main",
+ "open": [
+  "Erdos1052"
+ ],
+ "note": "coprime_of_mem_pud; local model Goedel-Prover-V2-8B-GGUF:Q4_K_M"
+}
