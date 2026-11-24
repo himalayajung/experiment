@@ -66,19 +66,35 @@ if (process.platform === 'darwin') spawn('caffeinate', ['-i', '-w', String(proce
 
 const sh = (cmd: string, a: string[], cwd?: string) => execFileSync(cmd, a, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 
-/** One pull request for one passing proof: a fresh branch from GitHub's master with only that file. */
+const REPO = 'open-science-org/experiment';
+let pushTo: { url: string; owner: string } | undefined;
+/** Where this lab's branches go: the shared repo if the user may push to it, otherwise their own fork (made once). */
+function destination() {
+  if (pushTo) return pushTo;
+  if (sh('gh', ['api', `repos/${REPO}`, '--jq', '.permissions.push']) === 'true') return (pushTo = { url: `https://github.com/${REPO}.git`, owner: '' });
+  const owner = sh('gh', ['api', 'user', '--jq', '.login']);
+  sh('gh', ['repo', 'fork', REPO, '--clone=false']);
+  const fork = sh('gh', ['api', `repos/${REPO}/forks`, '--paginate', '--jq', `.[] | select(.owner.login == "${owner}") | .full_name`]).split('\n')[0];
+  if (!fork) throw new Error(`no fork of ${REPO} found for ${owner}`);
+  return (pushTo = { url: `https://github.com/${fork}.git`, owner });
+}
+
+/** One pull request for one passing proof: a fresh branch from the shared repo's master with only that file, pushed to
+ *  the shared repo or, for a lab without write access, to the lab's fork. */
 function openPullRequest(file: string, label: string, sub: Submission) {
   const branch = `shared-${lab}-${label.replace(/[^A-Za-z0-9_-]+/g, '-')}-${Date.now().toString(36)}`, tree = join(work, 'tree');
-  sh('git', ['fetch', '-q', 'origin', 'master']);
-  sh('git', ['worktree', 'add', '-q', '-B', branch, tree, 'origin/master']);
+  const to = destination();
+  sh('git', ['fetch', '-q', `https://github.com/${REPO}.git`, 'master']);
+  sh('git', ['worktree', 'add', '-q', '-B', branch, tree, 'FETCH_HEAD']);
   try {
     mkdirSync(join(tree, out), { recursive: true });
     copyFileSync(file, join(tree, out, file.split('/').pop()!));
     sh('git', ['add', join(out, file.split('/').pop()!)], tree);
     sh('git', ['commit', '-q', '-m', `Shared run: ${sub.kind} ${label}`], tree);
-    sh('git', ['push', '-q', 'origin', branch], tree);
+    // The GitHub CLI's login, so this works whether the clone uses SSH or HTTPS.
+    sh('git', ['-c', 'credential.helper=', '-c', 'credential.helper=!gh auth git-credential', 'push', '-q', to.url, branch], tree);
     const what = sub.kind === 'target' ? `target ${sub.target}` : `lemma ${label}: ${sub.statement}`;
-    return sh('gh', ['pr', 'create', '--base', 'master', '--head', branch, '--title', `Shared run: ${sub.kind} ${label}`, '--body', `Lab ${lab}: ${what}. Proof by ${model.split('/').pop()} on a local Mac (scripts/shared-local.ts); it passed \`node scripts/shared.ts check\` before submitting.`], tree).split('\n').pop();
+    return sh('gh', ['pr', 'create', '--repo', REPO, '--base', 'master', '--head', to.owner ? `${to.owner}:${branch}` : branch, '--title', `Shared run: ${sub.kind} ${label}`, '--body', `Lab ${lab}: ${what}. Proof by ${model.split('/').pop()} on a local Mac (scripts/shared-local.ts); it passed \`node scripts/shared.ts check\` before submitting.`], tree).split('\n').pop();
   } finally {
     sh('git', ['worktree', 'remove', '--force', tree]);
   }
