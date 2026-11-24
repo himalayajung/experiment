@@ -73,5 +73,20 @@
    "Erdos1052"
   ],
   "uses": []
+ },
+ {
+  "id": "L6",
+  "name": "OSO.L6",
+  "lab": "himalayajung",
+  "pr": 7,
+  "at": "2026-11-24T02:12:41.857Z",
+  "kind": "lemma",
+  "target": null,
+  "statement": "(n d : ℕ) (hd : d ∈ properUnitaryDivisors n) : Nat.Coprime d (n / d)",
+  "proof": ":= by\n  have h_main : Nat.Coprime d (n / d) := by\n    have h₁ : d ∈ properUnitaryDivisors n := hd\n    have h₂ : d ∈ Finset.Ico 1 n ∧ d ∣ n ∧ d.Coprime (n / d) := by\n      simpa [properUnitaryDivisors] using h₁\n    exact h₂.2.2\n  exact h_main",
+  "open": [
+   "Erdos1052"
+  ],
+  "uses": []
  }
 ]

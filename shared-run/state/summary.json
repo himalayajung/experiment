@@ -1,6 +1,6 @@
 {
  "alpha": 0.2,
- "updatedAt": "2026-11-24T00:05:45.496Z",
+ "updatedAt": "2026-11-24T02:12:41.859Z",
  "activeLabs": 1,
  "targets": [
   {
@@ -189,17 +189,38 @@
    "pr": 6,
    "points": 0,
    "statement": "(n : ℕ) (hn : IsUnitaryPerfect n) : 1 < n"
+  },
+  {
+   "id": "L6",
+   "lab": "himalayajung",
+   "kind": "lemma",
+   "target": null,
+   "uses": [],
+   "at": "2026-11-24T02:12:41.857Z",
+   "pr": 7,
+   "points": 0,
+   "statement": "(n d : ℕ) (hd : d ∈ properUnitaryDivisors n) : Nat.Coprime d (n / d)"
   }
  ],
  "labs": [
   {
    "name": "himalayajung",
    "points": 0,
-   "proofs": 5,
-   "lastAt": "2026-11-24T00:05:45.488Z"
+   "proofs": 6,
+   "lastAt": "2026-11-24T02:12:41.857Z"
   }
  ],
  "feed": [
+  {
+   "at": "2026-11-24T02:12:41.857Z",
+   "lab": "himalayajung",
+   "pr": 7,
+   "ok": true,
+   "kind": "lemma",
+   "target": null,
+   "id": "L6",
+   "errors": []
+  },
   {
    "at": "2026-11-24T00:05:45.488Z",
    "lab": "himalayajung",
