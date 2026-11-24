@@ -88,5 +88,20 @@
    "Erdos1052"
   ],
   "uses": []
+ },
+ {
+  "id": "L7",
+  "name": "OSO.L7",
+  "lab": "himalayajung",
+  "pr": 8,
+  "at": "2026-11-24T02:14:09.864Z",
+  "kind": "lemma",
+  "target": null,
+  "statement": "(n d : ℕ) (hd : d ∈ properUnitaryDivisors n) : d < n",
+  "proof": ":= by\n  have h₁ : d < n := by\n    have h₂ : d ∈ Finset.Ico 1 n := by\n      -- Extract the fact that d is in Finset.Ico 1 n from the membership in properUnitaryDivisors n\n      simp only [properUnitaryDivisors, Finset.mem_filter, Finset.mem_Ico, Finset.mem_singleton] at hd\n      -- Simplify the condition to get d ∈ Finset.Ico 1 n\n      aesop\n    -- Use the fact that d ∈ Finset.Ico 1 n to get d < n\n    have h₃ : d < n := Finset.mem_Ico.mp h₂ |>.2\n    exact h₃\n  exact h₁",
+  "open": [
+   "Erdos1052"
+  ],
+  "uses": []
  }
 ]
